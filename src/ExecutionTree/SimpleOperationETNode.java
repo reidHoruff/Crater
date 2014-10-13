@@ -1,0 +1,52 @@
+package ExecutionTree;
+
+import CraterExecutionEnvironment.CraterVariableScope;
+import Exceptions.CraterExecutionException;
+import NativeDataTypes.CBoolean;
+import NativeDataTypes.CDT;
+import NativeDataTypes.CInteger;
+import NativeDataTypes.CList;
+import Scanning.Token;
+
+/**
+ * Created by reidhoruff on 10/8/14.
+ */
+
+/* /*+- etc */
+public class SimpleOperationETNode extends ETNode {
+
+    private ETNode left, right;
+    private Token operator;
+
+    public SimpleOperationETNode(ETNode left, Token operator, ETNode right) {
+        this.left = left.setParent(this);
+        this.operator = operator;
+        this.right = right.setParent(this);
+    }
+
+    public void setChildrenVariableScope(CraterVariableScope scope) {
+        this.left.setVariableScope(scope);
+        this.right.setVariableScope(scope);
+    }
+
+    public CDT execute() {
+        CDT l = this.left.executeMetaSafe();
+        CDT r = this.right.executeMetaSafe();
+
+        switch (this.operator.token) {
+            case C_PLUS: return l.siPlus(r);
+            case C_STAR: return l.siMultiply(r);
+            case C_DASH: return l.siSubtract(r);
+            case C_FLSASH: return l.siDivide(r);
+            case KW_AND: return l.siBooleanAnd(r);
+            case KW_OR: return l.siBooleanOr(r);
+            case KW_XOR: return l.siBooleanXor(r);
+            case C_LESSTHAN: return l.siLessThan(r);
+            case D_DOUBLE_EQUALS: return l.siMutuallyEqualTo(r);
+            case KW_CONTAINS: return l.siContains(r);
+        }
+
+        throw new CraterExecutionException("invalid operation symbol");
+    }
+
+}
