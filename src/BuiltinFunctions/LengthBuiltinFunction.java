@@ -29,6 +29,14 @@ public class LengthBuiltinFunction extends CFunction {
             return new CInteger(values.get(0).toString().length());
         }
 
+        if (values.get(0) instanceof CDict) {
+            return new CInteger(values.get(0).toCDict().size());
+        }
+
+        if (values.get(0) instanceof CRange) {
+            return new CInteger(values.get(0).toCRange().length());
+        }
+
         throw new CraterExecutionException("len() must be given a single list or string");
     }
 

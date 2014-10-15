@@ -12,6 +12,7 @@ import java.util.ArrayList;
 
 public class StatementListETNode extends ETNode {
     private ArrayList<ETNode> children;
+    private boolean isExecutionBroken = false;
 
     public StatementListETNode() {
         this.children = new ArrayList<ETNode>();
@@ -31,14 +32,15 @@ public class StatementListETNode extends ETNode {
     }
 
     public void setVariableScope(CraterVariableScope scope) {
-        this.variableScope = null;
-        if (this.parent != null) {
-            this.variableScope = new CraterVariableScope(this.parent.getVariableScope());
-        } else {
-            this.variableScope = scope;
-        }
-
+        // he has his own variable scope that extends onto its parent's
+        this.variableScope = new CraterVariableScope(scope);
         this.setChildrenVariableScope(this.variableScope);
+    }
+
+    @Override
+    protected void handleBreak() {
+        this.isExecutionBroken = true;
+        super.handleBreak();
     }
 
     public CDT execute() {
@@ -46,6 +48,9 @@ public class StatementListETNode extends ETNode {
 
         for (ETNode child : this.children) {
             lastValue = child.execute();
+            if (this.isExecutionBroken) {
+                break;
+            }
         }
 
         if (lastValue != null) {

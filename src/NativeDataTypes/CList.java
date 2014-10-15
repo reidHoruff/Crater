@@ -1,5 +1,7 @@
 package NativeDataTypes;
 
+import Exceptions.CraterExecutionException;
+
 import java.util.ArrayList;
 
 /**
@@ -82,10 +84,39 @@ public class CList extends CDT {
 
     @Override
     public CDT siPlus(CDT other) {
+        CList newList = (CList)this.clone();
         if (other instanceof CList) {
-            return this.clone().toCList().addCDT(other);
+            CList otherlist = other.toCList();
+            for (CDT item : otherlist.items) {
+                newList.items.add(item.clone());
+            }
+            return newList;
         }
         return super.siPlus(other);
+    }
+
+    @Override
+    public CDT siIndex(CDT index) {
+        if (index instanceof CInteger) {
+            return this.singleValueListAccess(index.toInt());
+        }
+        return super.siIndex(index);
+    }
+
+    public CList rangeListAccess(CRange range) {
+        CList newList = new CList();
+        for (int x = range.head; x < range.tail; x += range.increment) {
+            newList.addCDT(this.getElementMetaSafe(x).clone());
+        }
+        return newList;
+    }
+
+    public CDT singleValueListAccess(int index) {
+        if (index < 0 || index >= this.getLength()) {
+            throw new CraterExecutionException("index out of bounds");
+        }
+
+        return this.getElementWithMeta(index);
     }
 
     /**

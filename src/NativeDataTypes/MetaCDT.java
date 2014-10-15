@@ -4,9 +4,10 @@ package NativeDataTypes;
  * Created by reidhoruff on 10/9/14.
  */
 public class MetaCDT extends CDT {
-    private CDT data;
 
-    public MetaCDT(CDT data) {
+    protected CDT data;
+
+    protected MetaCDT(CDT data) {
         this.data = data;
     }
 
@@ -38,12 +39,16 @@ public class MetaCDT extends CDT {
     }
 
     @Override
-    public CDT nonrecursiveMetaSafe() {
-        return this.data;
+    public CDT siMutuallyEqualTo(CDT other) {
+        return this.metaSafe().siMutuallyEqualTo(other.metaSafe());
     }
 
     @Override
-    public CDT siMutuallyEqualTo(CDT other) {
-        return this.metaSafe().siMutuallyEqualTo(other.metaSafe());
+    public int hashCode() {
+        if (this.data == null) {
+            return 0;
+        } else {
+            return this.data.hashCode();
+        }
     }
 }

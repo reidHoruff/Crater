@@ -5,6 +5,7 @@ import Exceptions.CraterExecutionException;
 import NativeDataTypes.CBoolean;
 import NativeDataTypes.CDT;
 import NativeDataTypes.CInteger;
+import NativeDataTypes.CNone;
 
 /**
  * Created by reidhoruff on 10/10/14.
@@ -43,14 +44,15 @@ public class IfConditionETNode extends ETNode {
 
     @Override
     public CDT execute() {
-        int runs = 0;
+        CDT lastValue = new CNone();
+
         if (getCondition()) {
-            runs += 1;
-            this.body.execute();
+            lastValue = this.body.execute();
         } else if (this.elseBody != null) {
-            this.elseBody.execute();
+            lastValue = this.elseBody.execute();
         }
-        return new CInteger(runs);
+
+        return lastValue;
     }
 
     public void print(int level) {

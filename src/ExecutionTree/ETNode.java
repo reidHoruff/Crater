@@ -62,4 +62,16 @@ public abstract class ETNode {
         putSpaces(level);
         System.out.println("???");
     }
+
+    protected void handleBreak() {
+        if (this.parent != null) {
+            this.parent.handleBreak();
+        }
+    }
+
+    protected void handleReturn() {
+        if (this.parent != null) {
+            this.parent.handleReturn();
+        }
+    }
 }

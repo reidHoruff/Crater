@@ -50,6 +50,12 @@ public class CBoolean extends CDT {
     }
 
     @Override
+    public int hashCode() {
+        return new Boolean(this.value).hashCode();
+    }
+
+
+    @Override
     public CDT siBooleanXor(CDT other) {
         if (other instanceof CBoolean) {
             return new CBoolean(this.value ^ other.toBool());

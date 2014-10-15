@@ -2,7 +2,9 @@ package CraterExecutionEnvironment;
 
 import Exceptions.CraterInternalException;
 import NativeDataTypes.CDT;
+import NativeDataTypes.CNone;
 import NativeDataTypes.MetaCDT;
+import NativeDataTypes.VariableAssignMetaCDT;
 
 import java.util.HashMap;
 
@@ -39,26 +41,22 @@ public class CraterVariableScope {
             throw new CraterInternalException("hey, don't send me a MetaCDT here!");
         }
 
-        this.variables.put(name, new MetaCDT(value));
+        this.variables.put(name, value.withMetaWrapper());
     }
 
-    public MetaCDT getVariableReference(String identifier, boolean createIfNotFound) {
+    public MetaCDT getVariableReference(String identifier) {
         if (this.hasVariable(identifier)) {
             return this.variables.get(identifier);
         }
 
         if (this.parentScope != null) {
-            MetaCDT parentResult = this.parentScope.getVariableReference(identifier, false);
+            MetaCDT parentResult = this.parentScope.getVariableReference(identifier);
             if (parentResult != null) {
                 return parentResult;
             }
         }
 
-        if (createIfNotFound) {
-            return this.createVariable(identifier);
-        } else {
-            return null;
-        }
+        // we don't have it but here's a free pass to create it
+        return new VariableAssignMetaCDT(this, identifier);
     }
-
 }

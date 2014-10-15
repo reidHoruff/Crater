@@ -5,67 +5,42 @@ import Exceptions.CraterExecutionException;
 import NativeDataTypes.CDT;
 import NativeDataTypes.CInteger;
 import NativeDataTypes.CList;
+import NativeDataTypes.CRange;
 
 /**
  * Created by reidhoruff on 10/9/14.
  */
 public class ListDictReadETNode extends ETNode {
 
-    private ETNode listAccessee, startingIndex, endingIndex;
+    private ETNode listAccessee, index;
 
-    public ListDictReadETNode(ETNode listAccessee, ETNode startingIndex, ETNode endingIndex) {
+    public ListDictReadETNode(ETNode listAccessee, ETNode index) {
         this.listAccessee = listAccessee.setParent(this);
-        this.startingIndex = startingIndex.setParent(this);
-
-        if (endingIndex != null) {
-            this.endingIndex = endingIndex.setParent(this);
-        } else {
-            this.endingIndex = null;
-        }
+        this.index = index.setParent(this);
     }
 
     @Override
     public void setChildrenVariableScope(CraterVariableScope scope) {
         this.listAccessee.setVariableScope(getVariableScope());
-        this.startingIndex.setVariableScope(getVariableScope());
-        if (this.endingIndex != null) {
-            this.endingIndex.setVariableScope(getVariableScope());
-        }
+        this.index.setVariableScope(getVariableScope());
     }
 
     @Override
     public CDT execute() {
         CDT list = this.listAccessee.executeMetaSafe();
-        CDT startingIndex = this.startingIndex.executeMetaSafe();
-        CDT endingIndex = null;
-        if (this.endingIndex != null) {
-            endingIndex = this.endingIndex.executeMetaSafe();
-        }
+        CDT index = this.index.executeMetaSafe();
+        return list.siIndex(index);
 
-        if (list instanceof CList && startingIndex instanceof CInteger) {
-            if (endingIndex instanceof CInteger) {
-                return this.rangeListAccess(list.toCList(), startingIndex.toInt(), endingIndex.toInt());
-            } else {
-                return this.singleValueListAccess(list.toCList(), startingIndex.toInt());
+        /**
+        if (list instanceof CList) {
+            if (index instanceof CRange) {
+                return this.rangeListAccess(list.toCList(), index.toCRange());
+            } else if (index instanceof CInteger) {
+                return this.singleValueListAccess(list.toCList(), index.toInt());
             }
         }
 
-        throw new CraterExecutionException("lists must be accessed via integers");
-    }
-
-    public CList rangeListAccess(CList list, int a, int b) {
-        CList newList = new CList();
-        for (int x = a; x < b; x++) {
-            newList.addCDT(list.getElementMetaSafe(x).clone());
-        }
-        return newList;
-    }
-
-    public CDT singleValueListAccess(CList list, int index) {
-        if (index < 0 || index >= list.getLength()) {
-            throw new CraterExecutionException("index out of bounds");
-        }
-
-        return list.getElementWithMeta(index);
+        throw new CraterExecutionException("lists must be accessed via integers or range");
+         */
     }
 }

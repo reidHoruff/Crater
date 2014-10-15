@@ -26,8 +26,8 @@ public abstract class CDT {
         return this;
     }
 
-    public CDT nonrecursiveMetaSafe() {
-        return this;
+    public MetaCDT withMetaWrapper() {
+        return new MetaCDT(this);
     }
 
     public CDT callWithArguments(ArrayList<CDT> values) {
@@ -45,12 +45,20 @@ public abstract class CDT {
         return (CInteger)this;
     }
 
+    public CDict toCDict() {
+        return (CDict)this;
+    }
+
     public int toInt() {
         return toCInteger().intValue;
     }
 
     public CList toCList() {
         return (CList)this;
+    }
+
+    public CAtom toCAtom() {
+        return (CAtom)this;
     }
 
     public CBoolean toCBoolean() {
@@ -124,5 +132,21 @@ public abstract class CDT {
 
     public CDT siGreaterThanOrEqual(CDT other) {
         throw new CraterInvalidSimpleOperationException(">=", this, other);
+    }
+
+    public CDT siMod(CDT other) {
+        throw new CraterInvalidSimpleOperationException("%", this, other);
+    }
+
+    public CDT siIndex(CDT index) {
+        throw new CraterExecutionException(this.getTypeName() + " cannot be indexed by type " + index.getTypeName());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof CDT) {
+            return this.siMutuallyEqualTo((CDT) obj).toBool();
+        }
+        return super.equals(obj);
     }
 }

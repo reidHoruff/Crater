@@ -1,8 +1,6 @@
 package CraterExecutionEnvironment;
 
-import BuiltinFunctions.LengthBuiltinFunction;
-import BuiltinFunctions.MapBuiltinFunction;
-import BuiltinFunctions.PrintBuiltinFunction;
+import BuiltinFunctions.*;
 import ExecutionTree.ETNode;
 import ExecutionTree.StatementListETNode;
 import NativeDataTypes.CDT;
@@ -44,8 +42,10 @@ public class CraterExecutionEnvironmentSingleton {
         System.out.println("loading builtin functions...");
         rootScope.nonRecursiveSetValue("len", new LengthBuiltinFunction());
         rootScope.nonRecursiveSetValue("map", new MapBuiltinFunction());
-        rootScope.nonRecursiveSetValue("print", new PrintBuiltinFunction(false));
-        rootScope.nonRecursiveSetValue("println", new PrintBuiltinFunction(true));
+        rootScope.nonRecursiveSetValue("puts", new PrintBuiltinFunction(false));
+        rootScope.nonRecursiveSetValue("put", new PrintBuiltinFunction(true));
+        rootScope.nonRecursiveSetValue("gets", new GetStringBuiltinFunction());
+        rootScope.nonRecursiveSetValue("list", new ListBuiltinFunction());
     }
 
     public void addRootStatement(ETNode statement) {

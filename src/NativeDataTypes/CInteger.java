@@ -40,6 +40,31 @@ public class CInteger extends CDT {
         if (other instanceof CInteger) {
             return new CBoolean(this.intValue < other.toInt());
         }
+
+        if (other instanceof InfCDT) {
+            return new CBoolean(true);
+        }
+
+        if (other instanceof NinfCDT) {
+            return new CBoolean(false);
+        }
+
+        return super.siLessThan(other);
+    }
+
+    @Override
+    public CDT siGreaterThan(CDT other) {
+        if (other instanceof CInteger) {
+            return new CBoolean(this.intValue > other.toInt());
+        }
+
+        if (other instanceof InfCDT) {
+            return new CBoolean(false);
+        }
+
+        if (other instanceof NinfCDT) {
+            return new CBoolean(true);
+        }
         return super.siLessThan(other);
     }
 
@@ -66,7 +91,16 @@ public class CInteger extends CDT {
         }
         return super.siPlus(other);
     }
-/*
+
+    @Override
+    public CDT siMod(CDT other) {
+        if (other instanceof CInteger) {
+            return new CInteger(this.intValue % other.toInt());
+        }
+        return super.siMod(other);
+    }
+
+    /*
     end simple operations with other CDTs
      */
 
@@ -78,5 +112,26 @@ public class CInteger extends CDT {
     @Override
     public String getTypeName() {
         return "int";
+    }
+
+    @Override
+    public int hashCode() {
+        return this.intValue;
+    }
+
+    @Override
+    public CDT siBooleanOr(CDT other) {
+        if (other instanceof CNone) {
+            return this;
+        }
+        return super.siBooleanOr(other);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof CDT) {
+            return this.siMutuallyEqualTo((CDT)obj).toBool();
+        }
+        return false;
     }
 }

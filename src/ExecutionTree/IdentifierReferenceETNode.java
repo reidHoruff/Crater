@@ -8,6 +8,7 @@ import Scanning.Token;
  * Created by reidhoruff on 10/8/14.
  */
 public class IdentifierReferenceETNode extends ETNode {
+
     private Token token;
 
     public IdentifierReferenceETNode(Token token) {
@@ -15,10 +16,11 @@ public class IdentifierReferenceETNode extends ETNode {
     }
 
     public CDT execute() {
-        return this.getVariableScope().getVariableReference(this.token.sequence, true);
+        return this.getVariableScope().getVariableReference(this.token.sequence);
     }
 
     public void setChildrenVariableScope(CraterVariableScope scope) {
+        //...
     }
 
     public void print(int level) {

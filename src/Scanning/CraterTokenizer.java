@@ -43,10 +43,15 @@ public class CraterTokenizer {
     }
 
     private void defineTokens() {
+        //add("\\{\\-.*\\-\\}", TokenType.R_COMMENT);
         add("true", TokenType.KW_TRUE);
+        add("ret(urn)?", TokenType.KW_RETURN);
+        add("break", TokenType.KW_BREAK);
         add("if", TokenType.KW_IF);
+        add("in", TokenType.KW_IN);
         add("by", TokenType.KW_BY);
         add("else", TokenType.KW_ELSE);
+        add("for", TokenType.KW_FOR);
         add("while", TokenType.KW_WHILE);
         add("none", TokenType.KW_NONE);
         add("false", TokenType.KW_FALSE);
@@ -56,10 +61,13 @@ public class CraterTokenizer {
         add("\"[a-zA-Z_ 0-9\\.]*\"", TokenType.R_STRING_LITERAL);
         add("xor", TokenType.KW_XOR);
         add("append", TokenType.KW_APPEND);
+        add("inf", TokenType.KW_INF);
+        add("ninf", TokenType.KW_NINF);
         add("\\+=", TokenType.D_PLUS_EQUALS);
         add("\\.\\.", TokenType.D_TWO_DOTS);
         add("\\.\\.\\.", TokenType.D_THREE_DOTS);
         add("\\->", TokenType.D_DASH_GT);
+        add("\\%", TokenType.C_MOD);
         add("\\(", TokenType.C_LPAREN);
         add("\\[", TokenType.C_LBRACKSQ);
         add("\\]", TokenType.C_RBRACKSQ);
@@ -73,12 +81,15 @@ public class CraterTokenizer {
         add("==", TokenType.D_DOUBLE_EQUALS);
         add("=", TokenType.C_EQUALS);
         add(";", TokenType.C_SEMICOL);
+        add(":", TokenType.C_COLON);
         add("\\{", TokenType.C_LCURLEY);
         add("\\}", TokenType.C_RCURLEY);
         add("\\<", TokenType.C_LESSTHAN);
+        add("\\>", TokenType.C_GREATERTHAN);
         add("[1-9][0-9]*\\.[0-9]+", TokenType.R_FLOAT);
         add("-?[0-9]+", TokenType.R_INT);
         add("[a-zA-Z][a-zA-Z0-9_]*", TokenType.R_IDENT);
+        add("\\@[a-zA-Z][a-zA-Z0-9_]*", TokenType.R_ATOM);
     }
 
     private void add(String reg, TokenType tokenType) {

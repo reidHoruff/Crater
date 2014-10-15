@@ -13,6 +13,22 @@ public class CRange extends CDT{
         this.increment = increment;
     }
 
+    public CList generateList() {
+        CList list = new CList();
+        for (int i = this.head; i < tail; i += this.increment) {
+            list.addCDT(new CInteger(i));
+        }
+        return list;
+    }
+
+    public int length() {
+        int len = 0;
+        for (int i = this.head; i < this.tail; i += this.increment) {
+            len += 1;
+        }
+        return len;
+    }
+
     @Override
     public String toString() {
         String s = "";

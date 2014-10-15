@@ -13,6 +13,11 @@ public class CNone extends CDT{
     }
 
     @Override
+    public CDT siBooleanOr(CDT other) {
+        return other;
+    }
+
+    @Override
     public CDT siMutuallyEqualTo(CDT other) {
         return new CBoolean(other.metaSafe() instanceof CNone);
     }

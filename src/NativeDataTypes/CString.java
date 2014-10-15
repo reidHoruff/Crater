@@ -44,4 +44,10 @@ public class CString extends CDT {
     public String getTypeName() {
         return "string";
     }
+
+    @Override
+    public int hashCode() {
+        return this.value.hashCode();
+    }
+
 }

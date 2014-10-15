@@ -6,6 +6,7 @@ import Exceptions.CraterInternalException;
 import NativeDataTypes.CBoolean;
 import NativeDataTypes.CDT;
 import NativeDataTypes.CInteger;
+import NativeDataTypes.CNone;
 
 /**
  * Created by reidhoruff on 10/10/14.
@@ -13,6 +14,7 @@ import NativeDataTypes.CInteger;
 public class WhileConditionETNode extends ETNode {
 
     private ETNode condition, body;
+    protected boolean isLoopBroken = false;
 
     public WhileConditionETNode(ETNode condition, ETNode body) {
         this.condition = condition.setParent(this);
@@ -37,11 +39,16 @@ public class WhileConditionETNode extends ETNode {
 
     @Override
     public CDT execute() {
-        int runs = 0;
-        while (getCondition()) {
-            runs += 1;
-            this.body.execute();
+        this.isLoopBroken = false;
+        CDT lastValue = new CNone();
+        while (!this.isLoopBroken && getCondition()) {
+            lastValue = this.body.execute();
         }
-        return new CInteger(runs);
+        return lastValue;
+    }
+
+    @Override
+    protected void handleBreak() {
+        this.isLoopBroken = true;
     }
 }

@@ -35,9 +35,6 @@ public class IdentifierModifierETNode extends ETNode {
         CDT right = rightSide.executeMetaSafe();
 
         switch (this.modifierToken.token) {
-            case C_EQUALS:
-                left.setData(right);
-                return left.metaSafe();
             case D_PLUS_EQUALS:
                 return this.plusEquals(left.metaSafe(), right);
         }
