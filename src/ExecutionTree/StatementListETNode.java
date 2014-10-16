@@ -45,6 +45,7 @@ public class StatementListETNode extends ETNode {
 
     public CDT execute() {
         CDT lastValue = null;
+        this.isExecutionBroken = false;
 
         for (ETNode child : this.children) {
             lastValue = child.execute();

@@ -52,4 +52,6 @@ public enum TokenType {
     C_COLON,
     R_ATOM,
     KW_IN,
+    KW_FUN,
+    KW_IS,
 }

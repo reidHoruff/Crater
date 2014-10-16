@@ -134,4 +134,11 @@ public class CInteger extends CDT {
         }
         return false;
     }
+
+    /**
+    @Override
+    public CDT siIs(CDT other) {
+        return this.siMutuallyEqualTo(other);
+    }
+    */
 }

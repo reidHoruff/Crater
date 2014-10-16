@@ -48,27 +48,60 @@ public class CraterParser {
     }
 
     private ETNode statement() {
+
         if (acceptThenKeepETNode(identifierOrListDictAssignmentStatement())) {
             return popKeptETNode();
-        } else if (acceptThenKeepETNode(whileStatement())) {
+        }
+
+        else if (acceptThenKeepETNode(whileStatement())) {
             return popKeptETNode();
-        } else if (acceptThenKeepETNode(functionCall())) {
+        }
+
+        else if (acceptThenKeepETNode(functionDefinitionStatement())) {
             return popKeptETNode();
-        } else if (acceptThenKeepETNode(ifStatement())) {
+        }
+
+        else if (acceptThenKeepETNode(functionCall())) {
             return popKeptETNode();
-        } else if (acceptThenKeepETNode(forStatement())) {
+        }
+
+        else if (acceptThenKeepETNode(ifStatement())) {
             return popKeptETNode();
-        } else if (acceptThenKeepETNode(modifyingStatement())) {
+        }
+
+        else if (acceptThenKeepETNode(forStatement())) {
             return popKeptETNode();
-        } else if (accept(TokenType.KW_BREAK)) {
+        }
+
+        else if (acceptThenKeepETNode(modifyingStatement())) {
+            return popKeptETNode();
+        }
+
+        else if (accept(TokenType.KW_BREAK)) {
             return new LoopBreakStatementETNode();
-        } else if (acceptThenKeepETNode(returnStatement())) {
+        }
+
+        else if (acceptThenKeepETNode(returnStatement())) {
             return popKeptETNode();
         }
 
         accept(TokenType.C_SEMICOL);
 
         return null;
+    }
+
+    private ETNode functionDefinitionStatement() {
+
+        pushTokenStreamMarker();
+
+        if (accept(TokenType.KW_FUN)) {
+            ETNode name = some(identifierReference(), "identifier");
+            ETNode functionDefinition = some(functionDefinition(), "function definition");
+            return new IdentifierAssignmentETNode(name, functionDefinition);
+        } else {
+            popTokenStreamMarker();
+            return null;
+        }
     }
 
     private ETNode returnStatement() {
@@ -709,7 +742,7 @@ public class CraterParser {
 
     private ETNode some(ETNode node, String msg) {
         if (node == null) {
-            throw new CraterParserException("Expected " + msg);
+            throw new CraterParserException("Expected " + msg + " not " + getCurrentToken());
         }
         return node;
     }
@@ -727,7 +760,8 @@ public class CraterParser {
                 TokenType.C_GREATERTHAN,
                 TokenType.D_DOUBLE_EQUALS,
                 TokenType.KW_CONTAINS,
-                TokenType.C_MOD
+                TokenType.C_MOD,
+                TokenType.KW_IS
         );
     }
 

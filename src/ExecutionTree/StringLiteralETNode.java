@@ -11,12 +11,8 @@ import Scanning.Token;
 public class StringLiteralETNode extends ETNode {
     private CString value = null;
 
-    public StringLiteralETNode(String value) {
-        this.value = new CString(value);
-    }
-
     public StringLiteralETNode(Token valueToken) {
-        this.value = new CString(valueToken.sequence);
+        this.value = new CString(valueToken);
     }
 
     @Override

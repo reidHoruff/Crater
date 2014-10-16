@@ -33,6 +33,7 @@ public class ForLoopETNode extends ETNode {
 
     @Override
     public CDT execute() {
+        this.isExecutionBroken = false;
         CDT expression = this.feederExpression.executeMetaSafe();
         CDT lastValue = new CNone();
 

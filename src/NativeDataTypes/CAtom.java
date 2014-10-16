@@ -27,6 +27,7 @@ public class CAtom extends CDT {
         return "atom";
     }
 
+
     /**
      * operations
      */
@@ -38,6 +39,12 @@ public class CAtom extends CDT {
         }
         return new CBoolean(false);
     }
+
+    @Override
+    public CDT siIs(CDT other) {
+        return this.siMutuallyEqualTo(other);
+    }
+
 
     @Override
     public int hashCode() {

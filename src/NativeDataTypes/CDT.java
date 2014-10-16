@@ -138,6 +138,10 @@ public abstract class CDT {
         throw new CraterInvalidSimpleOperationException("%", this, other);
     }
 
+    public CDT siIs(CDT other) {
+        return this.siMutuallyEqualTo(other);
+    }
+
     public CDT siIndex(CDT index) {
         throw new CraterExecutionException(this.getTypeName() + " cannot be indexed by type " + index.getTypeName());
     }

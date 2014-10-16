@@ -49,11 +49,13 @@ public class CraterTokenizer {
         add("break", TokenType.KW_BREAK);
         add("if", TokenType.KW_IF);
         add("in", TokenType.KW_IN);
+        add("is", TokenType.KW_IS);
         add("by", TokenType.KW_BY);
         add("else", TokenType.KW_ELSE);
         add("for", TokenType.KW_FOR);
         add("while", TokenType.KW_WHILE);
         add("none", TokenType.KW_NONE);
+        add("fun", TokenType.KW_FUN);
         add("false", TokenType.KW_FALSE);
         add("and", TokenType.KW_AND);
         add("contains", TokenType.KW_CONTAINS);
