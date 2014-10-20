@@ -77,8 +77,8 @@ public class CraterParser {
             return popKeptETNode();
         }
 
-        else if (accept(TokenType.KW_BREAK)) {
-            return new LoopBreakStatementETNode();
+        else if (acceptThenKeepETNode(breakStatement())) {
+            return popKeptETNode();
         }
 
         else if (acceptThenKeepETNode(returnStatement())) {
@@ -118,6 +118,14 @@ public class CraterParser {
 
         } else {
             popTokenStreamMarkerAndRestore();
+            return null;
+        }
+    }
+
+    private ETNode breakStatement() {
+        if (accept(TokenType.KW_BREAK)) {
+            return new LoopBreakStatementETNode();
+        } else {
             return null;
         }
     }
