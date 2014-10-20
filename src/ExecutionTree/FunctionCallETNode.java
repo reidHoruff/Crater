@@ -2,8 +2,6 @@ package ExecutionTree;
 
 import CraterExecutionEnvironment.CraterVariableScope;
 import NativeDataTypes.CDT;
-import NativeDataTypes.CFunction;
-import NativeDataTypes.MetaCDT;
 
 import java.util.ArrayList;
 

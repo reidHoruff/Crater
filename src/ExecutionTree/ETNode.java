@@ -1,10 +1,9 @@
 package ExecutionTree;
 
 import CraterExecutionEnvironment.CraterVariableScope;
-import Exceptions.CraterExecutionException;
+import CraterTyping.TypeEnforcer;
 import Exceptions.CraterInternalException;
 import NativeDataTypes.CDT;
-import NativeDataTypes.CNone;
 import NativeDataTypes.MetaCDT;
 
 /**
@@ -14,6 +13,7 @@ import NativeDataTypes.MetaCDT;
 public abstract class ETNode {
     public ETNode parent;
     public CraterVariableScope variableScope;
+    private TypeEnforcer typeEnforcer;
 
     public ETNode setParent(ETNode parent) {
         this.parent = parent;
@@ -46,12 +46,26 @@ public abstract class ETNode {
     }
 
     protected final CDT executeMetaSafe() {
-        return this.execute().metaSafe();
+        CDT value = this.execute().metaSafe();
+        if (this.hasTypeEnforcement()) {
+            if (this.typeEnforcer.isCorrectType(value)) {
+                return value;
+            } else {
+                throw typeEnforcer.getException(value);
+            }
+        } else {
+            return value;
+        }
     }
 
-    /**
-     * related to printing
-     */
+    protected boolean hasTypeEnforcement() {
+        return this.typeEnforcer != null;
+    }
+
+    public void setTypeEnforcer(TypeEnforcer enforcer) {
+        this.typeEnforcer = enforcer;
+    }
+
     public void putSpaces(int spaces) {
         while (spaces --> 0) {
             System.out.print(" ");

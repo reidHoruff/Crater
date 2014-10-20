@@ -8,6 +8,7 @@ package Scanning;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Scanner;
 
@@ -15,14 +16,8 @@ import java.util.Scanner;
  * This is an implementation of Scanning specific to Crater
  */
 public class CraterTokenizer {
-    private String input = null;
     private Tokenizer tokenizer = null;
-
-    public CraterTokenizer(String input) {
-        this.input = input;
-        this.tokenizer = new Tokenizer();
-        this.defineTokens();
-    }
+    private ArrayList<String> lines;
 
     public CraterTokenizer(File input) {
         this.tokenizer = new Tokenizer();
@@ -33,12 +28,12 @@ public class CraterTokenizer {
             System.err.println("source file not found");
         }
 
-        StringBuilder builder = new StringBuilder();
+        lines = new ArrayList<String>();
+
         while (in.hasNextLine()) {
-            builder.append(in.nextLine());
-            builder.append("\n");
+            lines.add(in.nextLine());
         }
-        this.input = builder.toString();
+
         this.defineTokens();
     }
 
@@ -99,7 +94,7 @@ public class CraterTokenizer {
     }
 
     public LinkedList<Token> getTokens() {
-        this.tokenizer.tokenize(this.input);
+        this.tokenizer.tokenize(this.lines);
         return this.tokenizer.getTokens();
     }
 }

@@ -61,6 +61,10 @@ public abstract class CDT {
         return (CAtom)this;
     }
 
+    public CTuple toCTuple() {
+        return (CTuple)this;
+    }
+
     public CBoolean toCBoolean() {
         return (CBoolean)this;
     }

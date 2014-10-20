@@ -1,6 +1,7 @@
 package CraterExecutionEnvironment;
 
 import BuiltinFunctions.*;
+import CraterHelpers.clog;
 import ExecutionTree.ETNode;
 import ExecutionTree.StatementListETNode;
 import NativeDataTypes.CDT;
@@ -39,7 +40,7 @@ public class CraterExecutionEnvironmentSingleton {
     }
 
     private static void loadBuiltinFunctions(CraterVariableScope rootScope) {
-        System.out.println("loading builtin functions...");
+        clog.m("loading builtin functions...");
         rootScope.nonRecursiveSetValue("len", new LengthBuiltinFunction());
         rootScope.nonRecursiveSetValue("map", new MapBuiltinFunction());
         rootScope.nonRecursiveSetValue("puts", new PrintBuiltinFunction(false));

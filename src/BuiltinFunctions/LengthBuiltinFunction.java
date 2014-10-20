@@ -25,6 +25,10 @@ public class LengthBuiltinFunction extends CFunction {
             return new CInteger(values.get(0).toCList().getLength());
         }
 
+        if (values.get(0) instanceof CTuple) {
+            return new CInteger(values.get(0).toCList().getLength());
+        }
+
         if (values.get(0) instanceof CString) {
             return new CInteger(values.get(0).toString().length());
         }

@@ -4,6 +4,7 @@ package Scanning;
  * Created by reidhoruff on 10/7/14.
  */
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -23,23 +24,46 @@ public class Tokenizer {
         tokenInfos.add(new TokenInfo(Pattern.compile("^("+regex+")"), token));
     }
 
-    public void tokenize(String str) {
-        String s = str.trim();
+    public void tokenize(ArrayList<String> lines) {
         tokens.clear();
-        while (!s.isEmpty()) {
-            boolean match = false;
-            for (TokenInfo info : tokenInfos) {
-                Matcher m = info.regex.matcher(s);
-                if (m.find()) {
-                    match = true;
-                    String tok = m.group().trim();
-                    s = m.replaceFirst("").trim();
-                    tokens.add(new Token(info.token, tok));
-                    break;
+
+        int lineNumber = 0;
+
+        for (String line : lines) {
+            String origLine = line;
+            lineNumber += 1;
+            line = line.trim();
+
+            while (!line.isEmpty()) {
+                boolean match = false;
+                for (TokenInfo info : tokenInfos) {
+                    Matcher m = info.regex.matcher(line);
+                    if (m.find()) {
+                        match = true;
+                        String tok = m.group().trim();
+                        line = m.replaceFirst("").trim();
+                        tokens.add(new Token(info.token, tok, lineNumber));
+                        break;
+                    }
+                }
+
+                if (!match) {
+                    throw err(lineNumber, origLine, origLine.length() - line.length());
                 }
             }
-            if (!match) throw new CraterParserException("Unexpected character in input: "+s);
         }
+    }
+
+    public CraterParserException err(int lineNumber, String line, int column) {
+        String caret = "";
+        for (int i = 0; i < column; i++) caret += "-";
+        caret += "^";
+
+         return new CraterParserException(
+                "Parse error on line: " + lineNumber + ": col: " + (column + 1) + "\n" +
+                line + "\n" +
+                caret
+        );
     }
 
     public LinkedList<Token> getTokens() {

@@ -7,7 +7,7 @@ import java.util.HashMap;
 /**
  * Created by reidhoruff on 10/14/14.
  */
-public class CDict extends CDT {
+public class CDict extends AbstractCIndexable {
 
     public HashMap<CDT, MetaCDT> dictionary;
 

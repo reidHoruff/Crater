@@ -42,7 +42,6 @@ while true {
     break;
 }
 
-
 put(len(0..10 by 2))
 
 
@@ -59,17 +58,15 @@ fun out |x| -> {
     fun add |y| -> {
         return x + y
     }
-    return || -> add
+    return || -> (add, add)
 }
 
 put("here" * 10)
-put(out(4)()(100 % 4))
+put(out(4)()[0](100 % 4))
 
-for g in 10 {
-    for h in 10 {
-        put(g, h, g+h)
-        break
-    }
-}
+rng = 1..100
+put(rng)
 
-put(45343 is 4)
+put((1,2) + (2,3))
+put([1,2,3] + [4,5,6][5])
+put((|x| -> @fuckyou)(5))

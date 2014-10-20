@@ -5,18 +5,18 @@ import Exceptions.CraterExecutionException;
 import java.util.ArrayList;
 
 /**
- * Created by reidhoruff on 10/8/14.
+ * Created by reidhoruff on 10/20/14.
  */
-public class CList extends AbstractCIndexable {
+public class CTuple extends AbstractCIndexable {
 
     private ArrayList<MetaCDT> items;
 
-    public CList() {
+    public CTuple() {
         super();
         this.items = new ArrayList<MetaCDT>();
     }
 
-    public CList addCDT(CDT item) {
+    public CTuple addCDT(CDT item) {
         this.items.add(new MetaCDT(item));
         return this;
     }
@@ -27,15 +27,15 @@ public class CList extends AbstractCIndexable {
 
     @Override
     public CDT clone() {
-        CList list = new CList();
+        CTuple tuple = new CTuple();
         for (CDT item : this.items) {
-            list.addCDT(item.clone());
+            tuple.addCDT(item.clone());
         }
-        return list;
+        return tuple;
     }
 
-    public static CList combineToFormNew(CList a, CList b) {
-        CList list = new CList();
+    public static CTuple combineToFormNew(CTuple a, CTuple b) {
+        CTuple list = new CTuple();
         for (CDT item : a.items) {
             list.addCDT(item.clone());
         }
@@ -46,14 +46,14 @@ public class CList extends AbstractCIndexable {
     }
 
     public String toString() {
-        String s = "[";// + Integer.toString(items.size()) + "|";
+        String s = "(";// + Integer.toString(items.size()) + "|";
         for (int i = 0; i < items.size(); i++) {
             s += items.get(i).toString();
             if (i < items.size() - 1) {
                 s += ", ";
             }
         }
-        return s + "]";
+        return s + ")";
     }
 
     public int getLength() {
@@ -79,18 +79,18 @@ public class CList extends AbstractCIndexable {
                 return new CBoolean(true);
             }
         }
-        return  new CBoolean(false);
+        return new CBoolean(false);
     }
 
     @Override
     public CDT siPlus(CDT other) {
-        CList newList = (CList)this.clone();
-        if (other instanceof CList) {
-            CList otherlist = other.toCList();
-            for (CDT item : otherlist.items) {
-                newList.items.add(item.clone().withMetaWrapper());
+        CTuple newtuple = (CTuple)this.clone();
+        if (other instanceof CTuple) {
+            CTuple otherTuple = other.toCTuple();
+            for (CDT item : otherTuple.items) {
+                newtuple.items.add(item.metaSafe().withMetaWrapper());
             }
-            return newList;
+            return newtuple;
         }
         return super.siPlus(other);
     }
@@ -101,14 +101,6 @@ public class CList extends AbstractCIndexable {
             return this.singleValueListAccess(index.toInt());
         }
         return super.siIndex(index);
-    }
-
-    public CList rangeListAccess(CRange range) {
-        CList newList = new CList();
-        for (int x = range.head; x < range.tail; x += range.increment) {
-            newList.addCDT(this.getElementMetaSafe(x).clone());
-        }
-        return newList;
     }
 
     public CDT singleValueListAccess(int index) {
@@ -124,6 +116,6 @@ public class CList extends AbstractCIndexable {
      */
 
     public String getTypeName() {
-        return "list";
+        return "tuple";
     }
 }

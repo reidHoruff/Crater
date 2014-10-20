@@ -6,6 +6,7 @@ package Exceptions;
 
 public class CraterParserException extends RuntimeException {
     public CraterParserException(String msg) {
-        super(msg);
+        System.out.println(msg);
+        System.exit(1);
     }
 }

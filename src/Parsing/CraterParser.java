@@ -2,6 +2,7 @@ package Parsing;
 
 import CraterExecutionEnvironment.CraterExecutionEnvironmentSingleton;
 
+import CraterHelpers.clog;
 import Exceptions.CraterParserException;
 import ExecutionTree.*;
 import NativeDataTypes.CAtom;
@@ -195,7 +196,7 @@ public class CraterParser {
             /**
              * something was found... check for a tail...
              */
-            if (acceptThenKeepExpressionTail(value)) {
+            if (acceptThenKeepETNode(expressionTail(value))) {
                 popTokenStreamMarker();
                 return popKeptETNode();
             }
@@ -270,6 +271,13 @@ public class CraterParser {
             value = popKeptETNode();
         }
 
+        /*
+        tuple literal
+         */
+        else if (acceptThenKeepETNode(tuple())) {
+            value = popKeptETNode();
+        }
+
         /**
          * none literal
          */
@@ -319,22 +327,10 @@ public class CraterParser {
      */
     private ETNode functionCallOrListDictReferenceOrIdentifier() {
         pushTokenStreamMarker();
-
         if (acceptThenKeepETNode(identifierReference())) {
             ETNode reference = popKeptETNode();
-            while (true) {
-                boolean either = false;
-                if (acceptThenKeepETNode(functionCallTail(reference))) {
-                    reference = popKeptETNode();
-                    either = true;
-                }
-
-                if (acceptThenKeepETNode(listDictReferenceTail(reference))) {
-                    reference = popKeptETNode();
-                    either = true;
-                }
-
-                if (!either) break;
+            if (acceptThenKeepETNode(callOrListDictReferenceTail(reference))) {
+                reference = popKeptETNode();
             }
             popTokenStreamMarker();
             return reference;
@@ -344,11 +340,33 @@ public class CraterParser {
         }
     }
 
-    private boolean acceptThenKeepExpressionTail(ETNode expression) {
-        if (acceptThenKeepETNode(expressionTail(expression))) {
-            return true;
+    private ETNode callOrListDictReferenceTail(ETNode reference) {
+        pushTokenStreamMarker();
+        boolean any = false;
+        while (true) {
+            boolean either = false;
+            if (acceptThenKeepETNode(functionCallTail(reference))) {
+                reference = popKeptETNode();
+                either = true;
+                any = true;
+            }
+
+            if (acceptThenKeepETNode(listDictReferenceTail(reference))) {
+                reference = popKeptETNode();
+                either = true;
+                any = true;
+            }
+
+            if (!either) break;
         }
-        return false;
+
+        if (any) {
+            popTokenStreamMarker();
+            return reference;
+        } else {
+            popTokenStreamMarkerAndRestore();
+            return null;
+        }
     }
 
     /**
@@ -448,12 +466,15 @@ public class CraterParser {
         } else if (acceptThenKeepETNode(rangeOperatorTail(expression))) {
             popTokenStreamMarker();
             return popKeptETNode();
+        } else if (acceptThenKeepETNode(callOrListDictReferenceTail(expression))) {
+            popTokenStreamMarker();
+            return popKeptETNode();
         } else {
             popTokenStreamMarkerAndRestore();
             return null;
         }
 
-        if (acceptThenKeepExpressionTail(value)) {
+        if (acceptThenKeepETNode(expressionTail(value))) {
             popTokenStreamMarker();
             return popKeptETNode();
         }
@@ -467,6 +488,9 @@ public class CraterParser {
         return value;
     }
 
+    /**
+     * ..(exp)[by exp]
+     */
     private ETNode rangeOperatorTail(ETNode headExpression) {
         pushTokenStreamMarker();
         if (accept(TokenType.D_TWO_DOTS)) {
@@ -741,9 +765,36 @@ public class CraterParser {
         }
     }
 
+    private ETNode tuple() {
+        pushTokenStreamMarker();
+        if (accept(TokenType.C_LPAREN)) {
+            TupleLiteralETNode tuple = new TupleLiteralETNode();
+            boolean hasAtLeastTwo = false;
+            if (acceptThenKeepETNode(expression())) {
+                tuple.add(popKeptETNode());
+                while (accept(TokenType.C_COMMA) && acceptThenKeepETNode(expression())) {
+                    tuple.add(popKeptETNode());
+                    hasAtLeastTwo = true;
+                }
+            }
+
+            if (!hasAtLeastTwo) {
+                popTokenStreamMarkerAndRestore();
+                return null;
+            }
+
+            expect(TokenType.C_RPAREN);
+            popTokenStreamMarker();
+            return tuple;
+        } else {
+            popTokenStreamMarkerAndRestore();
+            return null;
+        }
+    }
+
     private ETNode some(ETNode node) {
         if (node == null) {
-            throw new CraterParserException("Unexpected: " + getCurrentToken().sequence);
+            throw new CraterParserException("Unexpected: " + getCurrentToken().toString());
         }
         return node;
     }
@@ -788,20 +839,20 @@ public class CraterParser {
     }
 
     private void pushTokenStreamMarker() {
-        System.out.println("MARKING: " + this.currentTokenPointer);
+        clog.m("MARKING: " + this.currentTokenPointer);
         this.streamMarkers.push(this.currentTokenPointer);
     }
 
     private void popTokenStreamMarker() {
-        System.out.println("REMOVING MARK AT: " + this.streamMarkers.pop());
+        clog.m("REMOVING MARK AT: " + this.streamMarkers.pop());
     }
 
     private void popTokenStreamMarkerAndRestore() {
         int restore = this.currentTokenPointer - streamMarkers.peek();
         if (restore > 0) {
-            System.out.println("RESTORING TO: " + streamMarkers.peek());
+            clog.m("RESTORING TO: " + streamMarkers.peek());
         } else {
-            System.out.println("REMOVING MARK AT: " + this.streamMarkers.peek());
+            clog.m("REMOVING MARK AT: " + this.streamMarkers.peek());
         }
         this.currentTokenPointer = this.streamMarkers.pop();
     }
@@ -832,7 +883,7 @@ public class CraterParser {
 
     private void popNextToken() {
         if (hasMoreTokens()) {
-            System.out.println("CONSUMED: " + getCurrentToken().sequence);
+            clog.m("CONSUMED: " + getCurrentToken().sequence);
             this.currentTokenPointer += 1;
         }
     }

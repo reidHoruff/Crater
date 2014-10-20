@@ -26,12 +26,17 @@ public class MetaCDT extends CDT {
         this.data = data;
     }
 
+    @Override
+    public MetaCDT withMetaWrapper() {
+        return this;
+    }
+
     public String toString() {
-        return data.toString();
+        return metaSafe().toString();
     }
 
     public CDT clone() {
-        return new MetaCDT(this.data.clone());
+        return metaSafe().clone().withMetaWrapper();
     }
 
     public String getTypeName() {
@@ -48,7 +53,7 @@ public class MetaCDT extends CDT {
         if (this.data == null) {
             return 0;
         } else {
-            return this.data.hashCode();
+            return metaSafe().hashCode();
         }
     }
 }
