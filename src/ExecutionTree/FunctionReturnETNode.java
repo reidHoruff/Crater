@@ -32,7 +32,7 @@ public class FunctionReturnETNode extends ETNode {
             this.handleReturn();
             return returnValue;
         } else {
-            return new CNone();
+            return CNone.get();
         }
     }
 }

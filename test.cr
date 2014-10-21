@@ -70,3 +70,18 @@ put(rng)
 put((1,2) + (2,3))
 put([1,2,3] + [4,5,6][5])
 put((|x| -> @fuckyou)(5))
+
+fun haha || -> {
+    put(1 + 1 + none)
+}
+
+fun poop |x| -> {
+    haha()
+}
+
+poop2 = poop
+
+final x = 2
+put(x)
+x += 2
+

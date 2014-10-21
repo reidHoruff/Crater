@@ -40,6 +40,9 @@ public class CraterTokenizer {
     private void defineTokens() {
         //add("\\{\\-.*\\-\\}", TokenType.R_COMMENT);
         add("true", TokenType.KW_TRUE);
+        add("inf", TokenType.KW_INF);
+        add("final", TokenType.KW_FINAL);
+        add("ninf", TokenType.KW_NINF);
         add("ret(urn)?", TokenType.KW_RETURN);
         add("break", TokenType.KW_BREAK);
         add("if", TokenType.KW_IF);
@@ -58,8 +61,6 @@ public class CraterTokenizer {
         add("\"[a-zA-Z_ 0-9\\.]*\"", TokenType.R_STRING_LITERAL);
         add("xor", TokenType.KW_XOR);
         add("append", TokenType.KW_APPEND);
-        add("inf", TokenType.KW_INF);
-        add("ninf", TokenType.KW_NINF);
         add("\\+=", TokenType.D_PLUS_EQUALS);
         add("\\.\\.", TokenType.D_TWO_DOTS);
         add("\\.\\.\\.", TokenType.D_THREE_DOTS);

@@ -15,6 +15,6 @@ public class NOPETNode extends ETNode {
     @Override
     public CDT execute() {
         //Fuck you I won't do whatcha tell me...
-        return new CNone();
+        return CNone.get();
     }
 }

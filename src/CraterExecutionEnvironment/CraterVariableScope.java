@@ -1,10 +1,7 @@
 package CraterExecutionEnvironment;
 
 import Exceptions.CraterInternalException;
-import NativeDataTypes.CDT;
-import NativeDataTypes.CNone;
-import NativeDataTypes.MetaCDT;
-import NativeDataTypes.VariableAssignMetaCDT;
+import NativeDataTypes.*;
 
 import java.util.HashMap;
 
@@ -37,11 +34,11 @@ public class CraterVariableScope {
     }
 
     public void nonRecursiveSetValue(String name, CDT value) {
-        if (value instanceof MetaCDT) {
-            throw new CraterInternalException("hey, don't send me a MetaCDT here!");
-        }
-
         this.variables.put(name, value.withMetaWrapper());
+    }
+
+    public void nonRecursiveSetFinalValue(String name, CDT value) {
+        this.variables.put(name, new FinalMetaCDT(value.metaSafe()));
     }
 
     public MetaCDT getVariableReference(String identifier) {

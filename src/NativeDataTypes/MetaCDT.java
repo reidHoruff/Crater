@@ -2,6 +2,25 @@ package NativeDataTypes;
 
 /**
  * Created by reidhoruff on 10/9/14.
+ *
+ * MetaCDTs are wrappers of traditional CDTs
+ * and as such provide the pivotal function setData(CDT data)
+ *
+ * A MetaCDT is returned as the result of a left hand
+ * execution ef.
+ * x = y
+ *
+ * x = left.executeAndExpectMeta()
+ * y = right.executeMetaSafe()
+ *
+ * x now equals a MetaCDT, a wrapper containing the actual data 'x'
+ * so that we can now manipulate the data that x points to.
+ *
+ *
+ * Think of MetaCDT's as a shovel or bucket.
+ * Scooping up and holding that data, we can then change the contants of
+ * the bucket...
+ *
  */
 public class MetaCDT extends CDT {
 
@@ -12,7 +31,7 @@ public class MetaCDT extends CDT {
     }
 
     public MetaCDT() {
-        this.data = new CNone();
+        this.data = CNone.get();
     }
 
     public CDT metaSafe() {
@@ -40,7 +59,8 @@ public class MetaCDT extends CDT {
     }
 
     public String getTypeName() {
-        return "meta(" + this.data.getTypeName() + ")";
+        return this.metaSafe().getTypeName();
+        //return "meta(" + this.data.getTypeName() + ")";
     }
 
     @Override

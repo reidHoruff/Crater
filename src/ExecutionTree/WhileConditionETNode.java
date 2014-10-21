@@ -40,9 +40,9 @@ public class WhileConditionETNode extends ETNode {
     @Override
     public CDT execute() {
         this.isLoopBroken = false;
-        CDT lastValue = new CNone();
+        CDT lastValue = CNone.get();
         while (!this.isLoopBroken && getCondition()) {
-            lastValue = this.body.execute();
+            lastValue = this.body.executeMetaSafe();
         }
         return lastValue;
     }

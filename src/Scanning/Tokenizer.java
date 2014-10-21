@@ -30,9 +30,9 @@ public class Tokenizer {
         int lineNumber = 0;
 
         for (String line : lines) {
-            String origLine = line;
             lineNumber += 1;
             line = line.trim();
+            String origLine = line;
 
             while (!line.isEmpty()) {
                 boolean match = false;
@@ -41,8 +41,8 @@ public class Tokenizer {
                     if (m.find()) {
                         match = true;
                         String tok = m.group().trim();
+                        tokens.add(new Token(info.token, tok, lineNumber, origLine, origLine.length() - line.length()));
                         line = m.replaceFirst("").trim();
-                        tokens.add(new Token(info.token, tok, lineNumber));
                         break;
                     }
                 }

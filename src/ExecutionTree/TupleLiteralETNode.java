@@ -32,7 +32,7 @@ public class TupleLiteralETNode extends ETNode {
     public CDT execute() {
         CTuple tuple = new CTuple();
         for (ETNode child : this.children) {
-            tuple.addCDT(child.execute());
+            tuple.addCDT(child.executeMetaSafe());
         }
         return tuple;
     }

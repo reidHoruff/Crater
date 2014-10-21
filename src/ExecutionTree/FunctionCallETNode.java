@@ -1,6 +1,8 @@
 package ExecutionTree;
 
+import CraterExecutionEnvironment.CExecSingleton;
 import CraterExecutionEnvironment.CraterVariableScope;
+import CraterExecutionEnvironment.FunctionCallStackFrame;
 import NativeDataTypes.CDT;
 
 import java.util.ArrayList;
@@ -38,13 +40,23 @@ public class FunctionCallETNode extends ETNode {
 
     @Override
     public CDT execute() {
+        FunctionCallStackFrame stackFrame = new FunctionCallStackFrame(this.spawningToken);
+
         CDT functionRef = this.functionReference.executeMetaSafe();
 
         ArrayList<CDT> argumentValues = new ArrayList<CDT>(5);
         for (ETNode parameterExpression : this.parameters) {
-            argumentValues.add(parameterExpression.executeMetaSafe());
+            CDT parametervalue = parameterExpression.executeMetaSafe();
+            stackFrame.addParameterCallingType(parametervalue);
+            argumentValues.add(parametervalue);
         }
 
-        return functionRef.callWithArguments(argumentValues);
+        CExecSingleton.get().getCallStack().push(stackFrame);
+
+        CDT returnValue =  functionRef.callWithArguments(argumentValues);
+
+        CExecSingleton.get().getCallStack().pop();
+
+        return returnValue;
     }
 }

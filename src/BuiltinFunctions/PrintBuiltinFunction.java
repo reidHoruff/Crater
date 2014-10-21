@@ -35,6 +35,6 @@ public class PrintBuiltinFunction extends CFunction {
             System.out.println();
         }
 
-        return new CNone();
+        return CNone.get();
     }
 }

@@ -17,6 +17,6 @@ public class ListBuiltinFunction extends CFunction {
         if (values.get(0) instanceof CRange) {
             return values.get(0).toCRange().generateList();
         }
-        return new CNone();
+        return CNone.get();
     }
 }

@@ -4,6 +4,16 @@ package NativeDataTypes;
  * Created by reidhoruff on 10/8/14.
  */
 public class CNone extends CDT{
+
+    private static CNone ourInstance = new CNone();
+
+    private CNone() {
+    }
+
+    public static CNone get() {
+        return CNone.ourInstance;
+    }
+
     public String toString() {
         return "none";
     }

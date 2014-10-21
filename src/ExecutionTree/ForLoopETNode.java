@@ -35,7 +35,7 @@ public class ForLoopETNode extends ETNode {
     public CDT execute() {
         this.isExecutionBroken = false;
         CDT expression = this.feederExpression.executeMetaSafe();
-        CDT lastValue = new CNone();
+        CDT lastValue = CNone.get();
 
         if (expression instanceof CRange) {
             CRange range = expression.toCRange();

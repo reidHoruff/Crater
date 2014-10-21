@@ -48,7 +48,7 @@ public class StatementListETNode extends ETNode {
         this.isExecutionBroken = false;
 
         for (ETNode child : this.children) {
-            lastValue = child.execute();
+            lastValue = child.executeMetaSafe();
             if (this.isExecutionBroken) {
                 break;
             }
@@ -57,7 +57,7 @@ public class StatementListETNode extends ETNode {
         if (lastValue != null) {
             return lastValue;
         } else {
-            return new CNone();
+            return CNone.get();
         }
     }
 

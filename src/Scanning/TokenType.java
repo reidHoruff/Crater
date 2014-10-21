@@ -54,4 +54,5 @@ public enum TokenType {
     KW_IN,
     KW_FUN,
     KW_IS,
+    KW_FINAL,
 }

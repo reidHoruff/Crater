@@ -16,6 +16,6 @@ public class LoopBreakStatementETNode extends ETNode {
     @Override
     public CDT execute() {
         this.parent.handleBreak();
-        return new CNone();
+        return CNone.get();
     }
 }

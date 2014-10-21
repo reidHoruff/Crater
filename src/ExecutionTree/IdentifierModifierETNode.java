@@ -5,6 +5,7 @@ import Exceptions.CraterExecutionException;
 import Exceptions.CraterParserException;
 import NativeDataTypes.*;
 import Scanning.Token;
+import Scanning.TokenType;
 
 
 /**
@@ -16,10 +17,10 @@ import Scanning.Token;
  */
 public class IdentifierModifierETNode extends ETNode {
 
-    private Token modifierToken;
+    private TokenType modifierToken;
     private ETNode leftSide, rightSide;
 
-    public IdentifierModifierETNode(ETNode leftSide, Token modifierToken, ETNode rightSide) {
+    public IdentifierModifierETNode(ETNode leftSide, TokenType modifierToken, ETNode rightSide) {
         this.leftSide = leftSide.setParent(this);
         this.modifierToken = modifierToken;
         this.rightSide = rightSide.setParent(this);
@@ -34,25 +35,12 @@ public class IdentifierModifierETNode extends ETNode {
         MetaCDT left = leftSide.executeAndExpectMetaCDT();
         CDT right = rightSide.executeMetaSafe();
 
-        switch (this.modifierToken.token) {
-            case D_PLUS_EQUALS:
-                return this.plusEquals(left.metaSafe(), right);
+        switch (this.modifierToken) {
+            case D_PLUS_EQUALS: left.setData(left.siPlusEquals(right)); break;
+            case C_EQUALS: left.setData(right); break;
+            default: throw new CraterParserException("Invalid operation");
         }
 
-        throw new CraterParserException("Invalid operation");
-    }
-
-    public static CDT plusEquals(CDT left, CDT right) {
-        if (left instanceof CList) {
-            ((CList) left).addCDT(right.clone());
-            return left;
-        }
-
-        if (left instanceof CInteger && right instanceof CInteger) {
-            ((CInteger) left).intValue += ((CInteger) right).intValue;
-            return left;
-        }
-
-        throw new CraterExecutionException("+= operator must be of for [list += *] or [int += int]");
+        return CNone.get();
     }
 }

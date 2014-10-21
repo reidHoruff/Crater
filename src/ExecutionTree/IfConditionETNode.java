@@ -44,12 +44,12 @@ public class IfConditionETNode extends ETNode {
 
     @Override
     public CDT execute() {
-        CDT lastValue = new CNone();
+        CDT lastValue = CNone.get();
 
         if (getCondition()) {
-            lastValue = this.body.execute();
+            lastValue = this.body.executeMetaSafe();
         } else if (this.elseBody != null) {
-            lastValue = this.elseBody.execute();
+            lastValue = this.elseBody.executeMetaSafe();
         }
 
         return lastValue;

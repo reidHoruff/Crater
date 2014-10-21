@@ -32,7 +32,7 @@ public class ListLiteralETNode extends ETNode{
     public CDT execute() {
         CList list = new CList();
         for (ETNode child : this.children) {
-            list.addCDT(child.execute());
+            list.addCDT(child.executeMetaSafe());
         }
         return list;
     }

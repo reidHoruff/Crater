@@ -27,7 +27,7 @@ public abstract class CDT {
     }
 
     public MetaCDT withMetaWrapper() {
-        return new MetaCDT(this);
+        return new MetaCDT(this.metaSafe());
     }
 
     public CDT callWithArguments(ArrayList<CDT> values) {
@@ -140,6 +140,10 @@ public abstract class CDT {
 
     public CDT siMod(CDT other) {
         throw new CraterInvalidSimpleOperationException("%", this, other);
+    }
+
+    public CDT siPlusEquals(CDT other) {
+        throw new CraterInvalidSimpleOperationException("+=", this, other);
     }
 
     public CDT siIs(CDT other) {

@@ -4,24 +4,28 @@ import BuiltinFunctions.*;
 import CraterHelpers.clog;
 import ExecutionTree.ETNode;
 import ExecutionTree.StatementListETNode;
-import NativeDataTypes.CDT;
 
-import java.util.HashMap;
+import java.util.Stack;
 
 /**
  * Created by reidhoruff on 10/8/14.
  */
-public class CraterExecutionEnvironmentSingleton {
-    private static CraterExecutionEnvironmentSingleton ourInstance = new CraterExecutionEnvironmentSingleton();
+public class CExecSingleton {
 
-    public static CraterExecutionEnvironmentSingleton getInstance() {
+    private static CExecSingleton ourInstance = new CExecSingleton();
+    private Stack<ExecutionStackFrame> statementStack;
+    private Stack<FunctionCallStackFrame> callStack;
+    private StatementListETNode rootStatementList;
+
+    public static CExecSingleton get() {
         return ourInstance;
     }
 
-    private StatementListETNode rootStatementList;
 
-    private CraterExecutionEnvironmentSingleton() {
+    private CExecSingleton() {
         this.rootStatementList = new StatementListETNode();
+        this.statementStack = new Stack<ExecutionStackFrame>();
+        this.callStack = new Stack<FunctionCallStackFrame>();
     }
 
     public StatementListETNode getRootStatementList() {
@@ -30,13 +34,13 @@ public class CraterExecutionEnvironmentSingleton {
 
     public void executeProgram() {
         CraterVariableScope rootVariableScope = new CraterVariableScope();
-        CraterExecutionEnvironmentSingleton.loadBuiltinFunctions(rootVariableScope);
+        CExecSingleton.loadBuiltinFunctions(rootVariableScope);
         this.rootStatementList.setVariableScope(rootVariableScope);
         this.rootStatementList.execute();
     }
 
     public static CraterVariableScope getRootVariableScope() {
-        return getInstance().rootStatementList.getVariableScope();
+        return get().rootStatementList.getVariableScope();
     }
 
     private static void loadBuiltinFunctions(CraterVariableScope rootScope) {
@@ -49,7 +53,11 @@ public class CraterExecutionEnvironmentSingleton {
         rootScope.nonRecursiveSetValue("list", new ListBuiltinFunction());
     }
 
-    public void addRootStatement(ETNode statement) {
-        this.rootStatementList.add(statement);
+    public Stack<ExecutionStackFrame> getStatementStack() {
+        return this.statementStack;
+    }
+
+    public Stack<FunctionCallStackFrame> getCallStack() {
+        return this.callStack;
     }
 }
