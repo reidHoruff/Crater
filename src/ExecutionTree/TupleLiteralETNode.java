@@ -18,21 +18,15 @@ public class TupleLiteralETNode extends ETNode {
         this.children = new ArrayList<ETNode>();
     }
 
-    public void setChildrenVariableScope(CraterVariableScope scope) {
-        for (ETNode child : this.children) {
-            child.setVariableScope(scope);
-        }
-    }
-
     public void add(ETNode child) {
         child.setParent(this);
         this.children.add(child);
     }
 
-    public CDT execute() {
+    public CDT execute(CraterVariableScope scope) {
         CTuple tuple = new CTuple();
         for (ETNode child : this.children) {
-            tuple.addCDT(child.executeMetaSafe());
+            tuple.addCDT(child.executeMetaSafe(scope));
         }
         return tuple;
     }

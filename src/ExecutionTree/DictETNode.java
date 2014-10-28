@@ -4,7 +4,6 @@ import CraterExecutionEnvironment.CraterVariableScope;
 import CraterHelpers.ETNodePair;
 import NativeDataTypes.CDT;
 import NativeDataTypes.CDict;
-import javafx.util.Pair;
 
 import java.util.ArrayList;
 
@@ -35,19 +34,11 @@ public class DictETNode extends ETNode {
     }
 
     @Override
-    public void setChildrenVariableScope(CraterVariableScope scope) {
-        for (ETNodePair p : this.pairs) {
-            p.key.setVariableScope(scope);
-            p.value.setVariableScope(scope);
-        }
-    }
-
-    @Override
-    public CDT execute() {
+    public CDT execute(CraterVariableScope scope) {
         CDict dict = new CDict();
 
         for (ETNodePair p : this.pairs) {
-            dict.put(p.key.executeMetaSafe(), p.value.executeMetaSafe());
+            dict.put(p.key.executeMetaSafe(scope), p.value.executeMetaSafe(scope));
         }
 
         return dict;

@@ -25,7 +25,6 @@ public enum TokenType {
     KW_AND,
     KW_OR,
     KW_XOR,
-    KW_APPEND,
     D_DASH_GT,
     D_TWO_DOTS,
     D_THREE_DOTS,
@@ -55,4 +54,12 @@ public enum TokenType {
     KW_FUN,
     KW_IS,
     KW_FINAL,
+
+    KW_INT,
+    KW_BOOL,
+    KW_LIST,
+    KW_CLASS,
+    C_PERIOD,
+    KW_INIT,
+    KW_NEW,
 }

@@ -1,6 +1,9 @@
 package NativeDataTypes;
 
+import BuiltinFunctions.CBuiltinMemberFunction;
 import Scanning.Token;
+
+import java.util.ArrayList;
 
 /**
  * Created by reidhoruff on 10/12/14.
@@ -39,6 +42,20 @@ public class CString extends CDT {
     }
 
     @Override
+    public CDT siAccessMember(String identifier) {
+        if (identifier.equals("length")) {
+            return new CBuiltinMemberFunction(this) {
+                @Override
+                public CDT callWithArguments(ArrayList<CDT> values) {
+                    return new CInteger(((CString)this.host).length());
+                }
+            };
+        }
+
+        return super.siAccessMember(identifier);
+    }
+
+    @Override
     public CDT siMultiply(CDT other) {
         if (other instanceof CInteger) {
             StringBuilder builder = new StringBuilder();
@@ -58,6 +75,10 @@ public class CString extends CDT {
     @Override
     public String toString() {
         return this.value;
+    }
+
+    public int length() {
+        return this.value.length();
     }
 
     @Override

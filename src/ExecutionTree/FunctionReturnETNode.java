@@ -19,16 +19,9 @@ public class FunctionReturnETNode extends ETNode {
     }
 
     @Override
-    public void setChildrenVariableScope(CraterVariableScope scope) {
+    public CDT execute(CraterVariableScope scope) {
         if (this.finalStatement != null) {
-            this.finalStatement.setVariableScope(scope);
-        }
-    }
-
-    @Override
-    public CDT execute() {
-        if (this.finalStatement != null) {
-            CDT returnValue = this.finalStatement.executeMetaSafe();
+            CDT returnValue = this.finalStatement.executeMetaSafe(scope);
             this.handleReturn();
             return returnValue;
         } else {

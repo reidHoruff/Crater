@@ -15,12 +15,8 @@ public class IdentifierReferenceETNode extends ETNode {
         this.token = token;
     }
 
-    public CDT execute() {
-        return this.getVariableScope().getVariableReference(this.token.sequence);
-    }
-
-    public void setChildrenVariableScope(CraterVariableScope scope) {
-        //...
+    public CDT execute(CraterVariableScope scope) {
+        return scope.getVariableReference(this.token.sequence);
     }
 
     public void print(int level) {

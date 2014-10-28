@@ -10,11 +10,7 @@ import NativeDataTypes.CNone;
 public class NoneLiteralETNode extends ETNode {
 
     @Override
-    public void setChildrenVariableScope(CraterVariableScope scope) {
-    }
-
-    @Override
-    public CDT execute() {
+    public CDT execute(CraterVariableScope scope) {
         return CNone.get();
     }
 }

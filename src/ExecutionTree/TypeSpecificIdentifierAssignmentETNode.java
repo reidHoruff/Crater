@@ -1,20 +1,23 @@
 package ExecutionTree;
 
 import CraterExecutionEnvironment.CraterVariableScope;
+import CraterTyping.TypeEnforcer;
 import NativeDataTypes.CDT;
 import NativeDataTypes.CNone;
-import NativeDataTypes.FinalMetaCDT;
+import NativeDataTypes.TypeProtectionMetaCDT;
 import Scanning.Token;
 
 /**
- * Created by reidhoruff on 10/20/14.
+ * Created by reidhoruff on 10/21/14.
  */
-public class FinalIdentifierAssignmentETNode extends ETNode {
+public class TypeSpecificIdentifierAssignmentETNode extends ETNode {
 
     private ETNode rightSide;
     private Token identifierToken;
+    private TypeEnforcer typeEnforcer;
 
-    public FinalIdentifierAssignmentETNode(Token identifierToken, ETNode rightSide) {
+    public TypeSpecificIdentifierAssignmentETNode(Token typeKeyWord, Token identifierToken, ETNode rightSide) {
+        this.typeEnforcer = new TypeEnforcer(typeKeyWord);
         this.identifierToken = identifierToken;
         this.rightSide = rightSide.setParent(this);
     }
@@ -24,7 +27,7 @@ public class FinalIdentifierAssignmentETNode extends ETNode {
         CDT right = rightSide.executeMetaSafe(scope);
         scope.nonRecursiveSetValueWithWrapper(
                 this.identifierToken.sequence,
-                new FinalMetaCDT(right)
+                new TypeProtectionMetaCDT(this.typeEnforcer, right)
         );
         return CNone.get();
     }

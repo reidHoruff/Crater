@@ -25,30 +25,18 @@ public class StatementListETNode extends ETNode {
         }
     }
 
-    public void setChildrenVariableScope(CraterVariableScope scope) {
-        for (ETNode child : this.children) {
-            child.setVariableScope(getVariableScope());
-        }
-    }
-
-    public void setVariableScope(CraterVariableScope scope) {
-        // he has his own variable scope that extends onto its parent's
-        this.variableScope = new CraterVariableScope(scope);
-        this.setChildrenVariableScope(this.variableScope);
-    }
-
     @Override
     protected void handleBreak() {
         this.isExecutionBroken = true;
         super.handleBreak();
     }
 
-    public CDT execute() {
+    public CDT execute(CraterVariableScope scope) {
         CDT lastValue = null;
         this.isExecutionBroken = false;
 
         for (ETNode child : this.children) {
-            lastValue = child.executeMetaSafe();
+            lastValue = child.executeMetaSafe(scope);
             if (this.isExecutionBroken) {
                 break;
             }

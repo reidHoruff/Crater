@@ -31,7 +31,7 @@ public class MetaCDT extends CDT {
     }
 
     public MetaCDT() {
-        this.data = CNone.get();
+        this.data = new CUndefined();
     }
 
     public CDT metaSafe() {

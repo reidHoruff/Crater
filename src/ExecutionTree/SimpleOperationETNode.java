@@ -2,10 +2,7 @@ package ExecutionTree;
 
 import CraterExecutionEnvironment.CraterVariableScope;
 import Exceptions.CraterExecutionException;
-import NativeDataTypes.CBoolean;
 import NativeDataTypes.CDT;
-import NativeDataTypes.CInteger;
-import NativeDataTypes.CList;
 import Scanning.Token;
 
 /**
@@ -24,14 +21,13 @@ public class SimpleOperationETNode extends ETNode {
         this.right = right.setParent(this);
     }
 
-    public void setChildrenVariableScope(CraterVariableScope scope) {
-        this.left.setVariableScope(scope);
-        this.right.setVariableScope(scope);
-    }
+    public CDT execute(CraterVariableScope scope) {
+        /**
+         * fix for short circuiting
+         */
 
-    public CDT execute() {
-        CDT l = this.left.executeMetaSafe();
-        CDT r = this.right.executeMetaSafe();
+        CDT l = this.left.executeMetaSafe(scope);
+        CDT r = this.right.executeMetaSafe(scope);
 
         switch (this.operator.token) {
             case C_PLUS: return l.siPlus(r);

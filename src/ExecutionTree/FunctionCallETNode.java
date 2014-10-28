@@ -22,38 +22,23 @@ public class FunctionCallETNode extends ETNode {
         }
     }
 
-    /**
     @Override
-    public void setVariableScope(CraterVariableScope scope) {
-        this.variableScope = new CraterVariableScope(scope);
-        this.setChildrenVariableScope(this.variableScope);
-    }
-     **/
-
-    @Override
-    public void setChildrenVariableScope(CraterVariableScope scope) {
-        this.functionReference.setVariableScope(scope);
-        for (ETNode parameter : this.parameters) {
-            parameter.setVariableScope(scope);
-        }
-    }
-
-    @Override
-    public CDT execute() {
+    public CDT execute(CraterVariableScope scope) {
+        /** mark stack frame */
         FunctionCallStackFrame stackFrame = new FunctionCallStackFrame(this.spawningToken);
 
-        CDT functionRef = this.functionReference.executeMetaSafe();
+        CDT functionRef = this.functionReference.executeMetaSafe(scope);
 
         ArrayList<CDT> argumentValues = new ArrayList<CDT>(5);
         for (ETNode parameterExpression : this.parameters) {
-            CDT parametervalue = parameterExpression.executeMetaSafe();
+            CDT parametervalue = parameterExpression.executeMetaSafe(scope);
             stackFrame.addParameterCallingType(parametervalue);
             argumentValues.add(parametervalue);
         }
 
         CExecSingleton.get().getCallStack().push(stackFrame);
 
-        CDT returnValue =  functionRef.callWithArguments(argumentValues);
+        CDT returnValue = functionRef.callWithArguments(argumentValues);
 
         CExecSingleton.get().getCallStack().pop();
 

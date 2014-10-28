@@ -23,17 +23,10 @@ public class CRangeETNode extends ETNode {
     }
 
     @Override
-    public void setChildrenVariableScope(CraterVariableScope scope) {
-        this.head.setVariableScope(scope);
-        this.tail.setVariableScope(scope);
-        this.increment.setVariableScope(scope);
-    }
-
-    @Override
-    public CDT execute() {
-        CDT head = this.head.executeMetaSafe();
-        CDT tail = this.tail.executeMetaSafe();
-        CDT increment = this.increment.executeMetaSafe();
+    public CDT execute(CraterVariableScope scope) {
+        CDT head = this.head.executeMetaSafe(scope);
+        CDT tail = this.tail.executeMetaSafe(scope);
+        CDT increment = this.increment.executeMetaSafe(scope);
 
 
         if (!(head instanceof CInteger)) {

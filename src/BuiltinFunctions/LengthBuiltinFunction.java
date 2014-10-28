@@ -9,11 +9,7 @@ import java.util.ArrayList;
 /**
  * Created by reidhoruff on 10/12/14.
  */
-public class LengthBuiltinFunction extends CFunction {
-
-    public LengthBuiltinFunction() {
-        super(null);
-    }
+public class LengthBuiltinFunction extends CBuiltinFunction {
 
     @Override
     public CDT callWithArguments(ArrayList<CDT> values) {

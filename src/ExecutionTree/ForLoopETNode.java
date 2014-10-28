@@ -21,42 +21,32 @@ public class ForLoopETNode extends ETNode {
     }
 
     @Override
-    public void setVariableScope(CraterVariableScope scope) {
-        super.setVariableScope(scope);
-    }
-
-    @Override
-    public void setChildrenVariableScope(CraterVariableScope scope) {
-        this.feederExpression.setVariableScope(getVariableScope());
-        this.body.setVariableScope(getVariableScope());
-    }
-
-    @Override
-    public CDT execute() {
+    public CDT execute(CraterVariableScope scope) {
+        scope = scope.extend();
         this.isExecutionBroken = false;
-        CDT expression = this.feederExpression.executeMetaSafe();
+        CDT expression = this.feederExpression.executeMetaSafe(scope);
         CDT lastValue = CNone.get();
 
         if (expression instanceof CRange) {
             CRange range = expression.toCRange();
             for (int i = range.head; i < range.tail; i += range.increment) {
                 if (this.isExecutionBroken) break;
-                this.body.getVariableScope().nonRecursiveSetValue(this.variableIdent, new CInteger(i));
-                lastValue = this.body.executeMetaSafe();
+                scope.nonRecursiveSetValue(this.variableIdent, new CInteger(i));
+                lastValue = this.body.executeMetaSafe(scope);
             }
         } else if (expression instanceof CInteger) {
             int top = expression.toInt();
             for (int i = 0; i < top; i++) {
                 if (this.isExecutionBroken) break;
-                this.body.getVariableScope().nonRecursiveSetValue(this.variableIdent, new CInteger(i));
-                lastValue = this.body.executeMetaSafe();
+                scope.nonRecursiveSetValue(this.variableIdent, new CInteger(i));
+                lastValue = this.body.executeMetaSafe(scope);
             }
         } else if (expression instanceof CDict) {
             CDict dict = expression.toCDict();
             for (CDT key : dict.dictionary.keySet()) {
                 if (this.isExecutionBroken) break;
-                this.body.getVariableScope().nonRecursiveSetValue(this.variableIdent, key);
-                lastValue = this.body.executeMetaSafe();
+                scope.nonRecursiveSetValue(this.variableIdent, key);
+                lastValue = this.body.executeMetaSafe(scope);
             }
         } else {
             throw new CraterExecutionException("invalid expression type for for loop");

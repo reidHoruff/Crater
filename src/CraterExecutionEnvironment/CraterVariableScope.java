@@ -23,8 +23,20 @@ public class CraterVariableScope {
         this.parentScope = parent;
     }
 
+    public CraterVariableScope extend() {
+        return new CraterVariableScope(this);
+    }
+
     private boolean hasVariable(String identifier) {
         return this.variables.containsKey(identifier);
+    }
+
+    public boolean recursiveHasVariable(String name) {
+        if (this.hasVariable(name)) {
+            return true;
+        }
+
+        return this.parentScope != null && this.parentScope.recursiveHasVariable(name);
     }
 
     private MetaCDT createVariable(String identifier) {
@@ -37,23 +49,31 @@ public class CraterVariableScope {
         this.variables.put(name, value.withMetaWrapper());
     }
 
-    public void nonRecursiveSetFinalValue(String name, CDT value) {
-        this.variables.put(name, new FinalMetaCDT(value.metaSafe()));
+    public void nonRecursiveSetValueWithWrapper(String name, MetaCDT value) {
+        this.variables.put(name, value);
     }
 
-    public MetaCDT getVariableReference(String identifier) {
+    private MetaCDT recursivelyFind(String identifier) {
         if (this.hasVariable(identifier)) {
             return this.variables.get(identifier);
         }
 
         if (this.parentScope != null) {
-            MetaCDT parentResult = this.parentScope.getVariableReference(identifier);
-            if (parentResult != null) {
-                return parentResult;
-            }
+            return this.parentScope.recursivelyFind(identifier);
         }
 
-        // we don't have it but here's a free pass to create it
-        return new VariableAssignMetaCDT(this, identifier);
+        return null;
+    }
+
+    public MetaCDT getVariableReference(String identifier) {
+
+        MetaCDT result = this.recursivelyFind(identifier);
+
+        if (result != null) {
+            return result;
+        } else {
+            // we don't have it but here's a free pass to create it
+            return new VariableAssignMetaCDT(this, identifier);
+        }
     }
 }

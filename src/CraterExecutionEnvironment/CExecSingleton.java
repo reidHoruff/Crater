@@ -2,7 +2,6 @@ package CraterExecutionEnvironment;
 
 import BuiltinFunctions.*;
 import CraterHelpers.clog;
-import ExecutionTree.ETNode;
 import ExecutionTree.StatementListETNode;
 
 import java.util.Stack;
@@ -16,31 +15,34 @@ public class CExecSingleton {
     private Stack<ExecutionStackFrame> statementStack;
     private Stack<FunctionCallStackFrame> callStack;
     private StatementListETNode rootStatementList;
+    private CraterVariableScope rootVariableScope;
 
     public static CExecSingleton get() {
         return ourInstance;
     }
 
-
     private CExecSingleton() {
         this.rootStatementList = new StatementListETNode();
         this.statementStack = new Stack<ExecutionStackFrame>();
         this.callStack = new Stack<FunctionCallStackFrame>();
+        this.rootVariableScope = new CraterVariableScope();
     }
 
     public StatementListETNode getRootStatementList() {
         return this.rootStatementList;
     }
 
-    public void executeProgram() {
-        CraterVariableScope rootVariableScope = new CraterVariableScope();
-        CExecSingleton.loadBuiltinFunctions(rootVariableScope);
-        this.rootStatementList.setVariableScope(rootVariableScope);
-        this.rootStatementList.execute();
+    public CraterVariableScope getRootVariableScope() {
+        return this.rootVariableScope;
     }
 
-    public static CraterVariableScope getRootVariableScope() {
-        return get().rootStatementList.getVariableScope();
+    public void executeProgram() {
+        CExecSingleton.loadBuiltinFunctions(this.rootVariableScope);
+        /**
+         * extend root variable scope before
+         * anything acts on it so that it only contains
+         */
+        this.rootStatementList.execute(rootVariableScope.extend());
     }
 
     private static void loadBuiltinFunctions(CraterVariableScope rootScope) {

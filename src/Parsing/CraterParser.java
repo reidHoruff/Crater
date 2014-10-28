@@ -94,6 +94,14 @@ public class CraterParser {
             statement = popKeptETNode();
         }
 
+        else if (acceptThenKeepETNode(typeDeclarationStatement())) {
+            statement = popKeptETNode();
+        }
+
+        else if (acceptThenKeepETNode(classDefinitionStatement())) {
+            statement = popKeptETNode();
+        }
+
         else {
             popTokenStreamMarkerAndRestore();
             return null;
@@ -108,6 +116,72 @@ public class CraterParser {
         return statement;
     }
 
+    /**
+     * class foobar {
+     *
+     * }
+     */
+    private ETNode classDefinitionStatement() {
+
+        pushTokenStreamMarker();
+
+        if (accept(TokenType.KW_CLASS)) {
+            Token name = grabToken(TokenType.R_IDENT);
+            expect(TokenType.C_LCURLEY);
+
+            ClassDefinitionETNode classBody = new ClassDefinitionETNode();
+
+            while (true) {
+                if (acceptThenKeepETNode(classConstructorStatement())) {
+                    classBody.setConstructor(popKeptETNode());
+                    continue;
+                }
+
+                if (acceptThenKeepETNode(functionDefinitionStatement())) {
+                    classBody.add(popKeptETNode());
+                    continue;
+                }
+
+                break;
+            }
+
+            expect(TokenType.C_RCURLEY);
+
+            popTokenStreamMarker();
+            return new FinalIdentifierAssignmentETNode(name, classBody);
+        } else {
+            popTokenStreamMarkerAndRestore();
+            return null;
+        }
+    }
+
+    private ETNode objectInstantiation() {
+        pushTokenStreamMarker();
+
+        if (accept(TokenType.KW_NEW)) {
+
+        }
+        return null;
+    }
+
+    /**
+     * init || -> {}
+     */
+    private ETNode classConstructorStatement() {
+
+        pushTokenStreamMarker();
+
+        if (accept(TokenType.KW_INIT)) {
+            return some(functionDefinition(), "class constructor");
+        } else {
+            popTokenStreamMarker();
+            return null;
+        }
+    }
+
+    /**
+     * fun foo || -> {}
+     */
     private ETNode functionDefinitionStatement() {
 
         pushTokenStreamMarker();
@@ -120,6 +194,17 @@ public class CraterParser {
             popTokenStreamMarker();
             return null;
         }
+    }
+
+    /**
+     * int, bool, list...
+     */
+    private boolean acceptThenKeepType() {
+        return acceptThenKeep(
+                TokenType.KW_INT,
+                TokenType.KW_BOOL,
+                TokenType.KW_LIST
+        );
     }
 
     /**
@@ -140,6 +225,26 @@ public class CraterParser {
         }
     }
 
+    /**
+     * [int,bool] foobar = exp...
+     */
+    private ETNode typeDeclarationStatement() {
+
+        pushTokenStreamMarker();
+
+        if (acceptThenKeepType()) {
+            Token type = popKeptToken();
+            Token ident = grabToken(TokenType.R_IDENT);
+            Token equals = grabToken(TokenType.C_EQUALS);
+            ETNode expression = some(expression());
+            popTokenStreamMarker();
+            return new TypeSpecificIdentifierAssignmentETNode(type, ident, expression)
+                    .setSpawningToken(equals);
+        } else {
+            popTokenStreamMarkerAndRestore();
+            return null;
+        }
+    }
     private ETNode returnStatement() {
         pushTokenStreamMarker();
 
@@ -380,6 +485,12 @@ public class CraterParser {
         }
     }
 
+    /**
+     * [exp]
+     * ()
+     * ()[]
+     * [].bar()
+     */
     private ETNode callOrListDictReferenceTail(ETNode reference) {
         pushTokenStreamMarker();
         boolean any = false;
@@ -392,6 +503,12 @@ public class CraterParser {
             }
 
             if (acceptThenKeepETNode(listDictReferenceTail(reference))) {
+                reference = popKeptETNode();
+                either = true;
+                any = true;
+            }
+
+            if (acceptThenKeepETNode(memberAccessTail(reference))) {
                 reference = popKeptETNode();
                 either = true;
                 any = true;
@@ -520,6 +637,10 @@ public class CraterParser {
             value = popKeptETNode();
         }
 
+        else if (acceptThenKeepETNode(callOrListDictReferenceTail(expression))) {
+            value = popKeptETNode();
+        }
+
         else {
             popTokenStreamMarkerAndRestore();
             return null;
@@ -560,6 +681,9 @@ public class CraterParser {
         }
     }
 
+    /**
+     * || -> {exp}
+     */
     private ETNode functionDefinition() {
 
         pushTokenStreamMarker();
@@ -593,7 +717,7 @@ public class CraterParser {
     /**
      * foo
      * foo[bar]
-     * foo[][][][][]...
+     * foo[][][].foo.bar[][]...
      * .. only []
      */
     private ETNode identifierOrListDictReference() {
@@ -604,10 +728,8 @@ public class CraterParser {
             ETNode ref = popKeptETNode();
             ref.setSpawningToken(peekMarkedToken());
 
-            while (accept(TokenType.C_LBRACKSQ)) {
-                ref = new ListDictReadETNode(ref, some(expression()));
-                ref.setSpawningToken(peekMarkedToken());
-                expect(TokenType.C_RBRACKSQ);
+            if (acceptThenKeepETNode(listDictMemberTail(ref))) {
+                ref = popKeptETNode();
             }
 
             popTokenStreamMarker();
@@ -620,13 +742,13 @@ public class CraterParser {
     }
 
     /**
-     * foobar[exp]()[]()
+     * foobar[exp].baz()[]()
      */
     private ETNode functionCall() {
 
         pushTokenStreamMarker();
 
-        if (acceptThenKeepETNode(identifierReference())) {
+        if (acceptThenKeepETNode(identifierReference()) || acceptThenKeepETNode(expressionHead())) {
             ETNode ref = popKeptETNode();
             if (acceptThenKeepETNode(ultimateFunctionCallTail(ref))) {
                 popTokenStreamMarker();
@@ -653,7 +775,7 @@ public class CraterParser {
     }
 
     /**
-     * can reference dicts and function calls as long as
+     * can reference dicts, members, and function calls as long as
      * it ends in a function call
      */
     private ETNode ultimateFunctionCallTail(ETNode reference) {
@@ -662,7 +784,7 @@ public class CraterParser {
 
         boolean lastWasFunctionTail = false;
 
-        while (acceptThenKeepETNode(listDictReferenceTail(reference))) {
+        while (acceptThenKeepETNode(listDictMemberTail(reference))) {
             reference = popKeptETNode();
             lastWasFunctionTail = false;
 
@@ -716,6 +838,40 @@ public class CraterParser {
     }
 
     /**
+     *  .foo
+     *  [exp]
+     *  .foo[exp].foo[][]
+     */
+    private ETNode listDictMemberTail(ETNode beforeMe) {
+        pushTokenStreamMarker();
+
+        ETNode reference = beforeMe;
+        boolean any = false;
+
+        while (true) {
+            boolean found = false;
+            if (acceptThenKeepETNode(listDictReferenceTail(reference))) {
+                reference = popKeptETNode();
+                any = found = true;
+            }
+            if (acceptThenKeepETNode(memberAccessTail(reference))) {
+                reference = popKeptETNode();
+                any = found = true;
+            }
+
+            if (!found) break;
+        }
+
+        if (any) {
+            popTokenStreamMarker();
+            return reference;
+        } else {
+            popTokenStreamMarkerAndRestore();
+            return null;
+        }
+    }
+
+    /**
      * [exp][exp]...
      */
     private ETNode listDictReferenceTail(ETNode beforeMe) {
@@ -735,6 +891,32 @@ public class CraterParser {
                 popTokenStreamMarker();
                 return baseReference;
             }
+        } else {
+            popTokenStreamMarkerAndRestore();
+            return null;
+        }
+    }
+
+    /**
+     * .foo
+     * .bar.baz...
+     */
+    private ETNode memberAccessTail(ETNode beforeMe) {
+
+        pushTokenStreamMarker();
+
+        ETNode reference = beforeMe;
+        boolean found = false;
+
+        while (accept(TokenType.C_PERIOD) && acceptThenKeep(TokenType.R_IDENT)) {
+            Token name = popKeptToken();
+            reference = new MemberAccessorETNode(reference, name);
+            found = true;
+        }
+
+        if (found) {
+            popTokenStreamMarker();
+            return reference;
         } else {
             popTokenStreamMarkerAndRestore();
             return null;
@@ -842,8 +1024,10 @@ public class CraterParser {
         this.streamMarkerStack.push(this.currentTokenPointer);
     }
 
-    private void popTokenStreamMarker() {
+    private Token popTokenStreamMarker() {
+        Token tok = peekMarkedToken();
         clog.m("REMOVING MARK AT: " + this.streamMarkerStack.pop());
+        return tok;
     }
 
     private void popTokenStreamMarkerAndRestore() {

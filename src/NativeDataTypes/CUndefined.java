@@ -1,17 +1,16 @@
 package NativeDataTypes;
 
 /**
- * Created by reidhoruff on 10/14/14.
+ * Created by reidhoruff on 10/21/14.
  */
-public class CDNE extends CDT {
-
+public class CUndefined extends CDT {
     @Override
     public String getTypeName() {
-        return "DNE";
+        return "undefined";
     }
 
     @Override
     public String toString() {
-        return "DNE";
+        return "undefined";
     }
 }

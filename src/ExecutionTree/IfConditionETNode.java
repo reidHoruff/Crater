@@ -4,7 +4,6 @@ import CraterExecutionEnvironment.CraterVariableScope;
 import Exceptions.CraterExecutionException;
 import NativeDataTypes.CBoolean;
 import NativeDataTypes.CDT;
-import NativeDataTypes.CInteger;
 import NativeDataTypes.CNone;
 
 /**
@@ -23,17 +22,8 @@ public class IfConditionETNode extends ETNode {
         }
     }
 
-    @Override
-    public void setChildrenVariableScope(CraterVariableScope scope) {
-        this.condition.setVariableScope(getVariableScope());
-        this.body.setVariableScope(getVariableScope());
-        if (this.elseBody != null) {
-            this.elseBody.setVariableScope(getVariableScope());
-        }
-    }
-
-    public boolean getCondition() {
-        CDT condition = this.condition.executeMetaSafe();
+    public boolean getCondition(CraterVariableScope scope) {
+        CDT condition = this.condition.executeMetaSafe(scope);
 
         if (condition instanceof CBoolean) {
             return condition.toBool();
@@ -43,18 +33,16 @@ public class IfConditionETNode extends ETNode {
     }
 
     @Override
-    public CDT execute() {
+    public CDT execute(CraterVariableScope scope) {
+        scope = scope.extend();
         CDT lastValue = CNone.get();
 
-        if (getCondition()) {
-            lastValue = this.body.executeMetaSafe();
+        if (getCondition(scope)) {
+            lastValue = this.body.executeMetaSafe(scope);
         } else if (this.elseBody != null) {
-            lastValue = this.elseBody.executeMetaSafe();
+            lastValue = this.elseBody.executeMetaSafe(scope);
         }
 
         return lastValue;
-    }
-
-    public void print(int level) {
     }
 }

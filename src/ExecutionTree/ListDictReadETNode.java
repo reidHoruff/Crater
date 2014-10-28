@@ -1,11 +1,7 @@
 package ExecutionTree;
 
 import CraterExecutionEnvironment.CraterVariableScope;
-import Exceptions.CraterExecutionException;
-import NativeDataTypes.CDT;
-import NativeDataTypes.CInteger;
-import NativeDataTypes.CList;
-import NativeDataTypes.CRange;
+import NativeDataTypes.*;
 
 /**
  * Created by reidhoruff on 10/9/14.
@@ -20,27 +16,11 @@ public class ListDictReadETNode extends ETNode {
     }
 
     @Override
-    public void setChildrenVariableScope(CraterVariableScope scope) {
-        this.listAccessee.setVariableScope(getVariableScope());
-        this.index.setVariableScope(getVariableScope());
-    }
+    public CDT execute(CraterVariableScope scope) {
+        CDT list = this.listAccessee.executeMetaSafe(scope);
+        CDT index = this.index.executeMetaSafe(scope);
+        CDT value = list.siIndex(index);
 
-    @Override
-    public CDT execute() {
-        CDT list = this.listAccessee.executeMetaSafe();
-        CDT index = this.index.executeMetaSafe();
-        return list.siIndex(index);
-
-        /**
-        if (list instanceof CList) {
-            if (index instanceof CRange) {
-                return this.rangeListAccess(list.toCList(), index.toCRange());
-            } else if (index instanceof CInteger) {
-                return this.singleValueListAccess(list.toCList(), index.toInt());
-            }
-        }
-
-        throw new CraterExecutionException("lists must be accessed via integers or range");
-         */
+        return value;
     }
 }

@@ -1,10 +1,8 @@
 package ExecutionTree;
 
 import CraterExecutionEnvironment.CraterVariableScope;
-import Exceptions.CraterExecutionException;
 import Exceptions.CraterParserException;
 import NativeDataTypes.*;
-import Scanning.Token;
 import Scanning.TokenType;
 
 
@@ -26,17 +24,12 @@ public class IdentifierModifierETNode extends ETNode {
         this.rightSide = rightSide.setParent(this);
     }
 
-    public void setChildrenVariableScope(CraterVariableScope scope) {
-        this.leftSide.setVariableScope(scope);
-        this.rightSide.setVariableScope(scope);
-    }
-
-    public CDT execute() {
-        MetaCDT left = leftSide.executeAndExpectMetaCDT();
-        CDT right = rightSide.executeMetaSafe();
+    public CDT execute(CraterVariableScope scope) {
+        MetaCDT left = leftSide.executeAndExpectMetaCDT(scope);
+        CDT right = rightSide.executeMetaSafe(scope);
 
         switch (this.modifierToken) {
-            case D_PLUS_EQUALS: left.setData(left.siPlusEquals(right)); break;
+            case D_PLUS_EQUALS: left.setData(left.metaSafe().siPlusEquals(right)); break;
             case C_EQUALS: left.setData(right); break;
             default: throw new CraterParserException("Invalid operation");
         }

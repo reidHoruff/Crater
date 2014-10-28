@@ -15,12 +15,7 @@ public class CDTLiteralETNode extends ETNode {
     }
 
     @Override
-    public void setChildrenVariableScope(CraterVariableScope scope) {
-        // i got no child
-    }
-
-    @Override
-    public CDT execute() {
+    public CDT execute(CraterVariableScope scope) {
         return this.value;
     }
 }

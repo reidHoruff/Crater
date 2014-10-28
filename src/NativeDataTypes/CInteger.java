@@ -1,5 +1,10 @@
 package NativeDataTypes;
 
+import BuiltinFunctions.CBuiltinFunction;
+import BuiltinFunctions.CBuiltinMemberFunction;
+
+import java.util.ArrayList;
+
 /**
  * Created by reidhoruff on 10/8/14.
  */
@@ -66,6 +71,25 @@ public class CInteger extends CDT {
             return new CBoolean(true);
         }
         return super.siLessThan(other);
+    }
+
+    @Override
+    public CDT siAccessMember(String identifier) {
+        if (identifier.equals("each")) {
+            return new CBuiltinMemberFunction(this) {
+                @Override
+                public CDT callWithArguments(ArrayList<CDT> values) {
+                    for (CDT value : values) {
+                        int v = ((CInteger)this.host).intValue;
+                        for (int i = 0; i < v; i++) {
+                            value.callWithSingleArgument(new CInteger(i));
+                        }
+                    }
+                    return CNone.get();
+                }
+            };
+        }
+        return super.siAccessMember(identifier);
     }
 
     @Override

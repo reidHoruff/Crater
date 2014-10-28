@@ -23,11 +23,7 @@ public class BooleanLiteralETNode extends ETNode {
         }
     }
 
-    public CDT execute() {
+    public CDT execute(CraterVariableScope scope) {
         return new CBoolean(this.value);
-    }
-
-    public void setChildrenVariableScope(CraterVariableScope scope) {
-        //ain't got no kids son...
     }
 }

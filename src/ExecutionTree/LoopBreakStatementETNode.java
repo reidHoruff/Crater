@@ -10,11 +10,7 @@ import NativeDataTypes.CNone;
 public class LoopBreakStatementETNode extends ETNode {
 
     @Override
-    public void setChildrenVariableScope(CraterVariableScope scope) {
-    }
-
-    @Override
-    public CDT execute() {
+    public CDT execute(CraterVariableScope scope) {
         this.parent.handleBreak();
         return CNone.get();
     }

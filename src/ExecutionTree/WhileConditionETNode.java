@@ -2,10 +2,8 @@ package ExecutionTree;
 
 import CraterExecutionEnvironment.CraterVariableScope;
 import Exceptions.CraterExecutionException;
-import Exceptions.CraterInternalException;
 import NativeDataTypes.CBoolean;
 import NativeDataTypes.CDT;
-import NativeDataTypes.CInteger;
 import NativeDataTypes.CNone;
 
 /**
@@ -21,14 +19,8 @@ public class WhileConditionETNode extends ETNode {
         this.body = body.setParent(this);
     }
 
-    @Override
-    public void setChildrenVariableScope(CraterVariableScope scope) {
-        this.condition.setVariableScope(getVariableScope());
-        this.body.setVariableScope(getVariableScope());
-    }
-
-    public boolean getCondition() {
-        CDT condition = this.condition.executeMetaSafe();
+    public boolean getCondition(CraterVariableScope scope) {
+        CDT condition = this.condition.executeMetaSafe(scope);
 
         if (condition instanceof CBoolean) {
             return condition.toBool();
@@ -38,11 +30,12 @@ public class WhileConditionETNode extends ETNode {
     }
 
     @Override
-    public CDT execute() {
+    public CDT execute(CraterVariableScope scope) {
+        scope = scope.extend();
         this.isLoopBroken = false;
         CDT lastValue = CNone.get();
-        while (!this.isLoopBroken && getCondition()) {
-            lastValue = this.body.executeMetaSafe();
+        while (!this.isLoopBroken && getCondition(scope)) {
+            lastValue = this.body.executeMetaSafe(scope);
         }
         return lastValue;
     }

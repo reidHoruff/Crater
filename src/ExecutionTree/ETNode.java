@@ -15,7 +15,6 @@ import Scanning.Token;
 
 public abstract class ETNode {
     public ETNode parent;
-    public CraterVariableScope variableScope;
     private TypeEnforcer typeEnforcer;
     public Token spawningToken;
 
@@ -24,31 +23,23 @@ public abstract class ETNode {
         return this;
     }
 
-    public void setSpawningToken(Token token) {
+    public ETNode setSpawningToken(Token token) {
         // only set once, subsequent sets would
         // be tokens of parent expressions, therefore would be less specific
         if (this.spawningToken == null) {
             //System.out.println("\nSETTING SPAWNED\n" + token.toString() + " [" + this.getClass().toString());
             this.spawningToken = token;
         }
+
+        // for chaining
+        return this;
     }
 
-    public void setVariableScope(CraterVariableScope scope) {
-        this.variableScope = scope;
-        this.setChildrenVariableScope(scope);
-    }
+    public abstract CDT execute(CraterVariableScope scope);
 
-    public abstract void setChildrenVariableScope(CraterVariableScope scope);
-
-    public CraterVariableScope getVariableScope() {
-        return this.variableScope;
-    }
-
-    public abstract CDT execute();
-
-    protected final MetaCDT executeAndExpectMetaCDT() {
+    protected final MetaCDT executeAndExpectMetaCDT(CraterVariableScope scope) {
         this.pushFrame();
-        CDT data = this.execute();
+        CDT data = this.execute(scope);
         if (!(data instanceof MetaCDT)) {
             throw new CraterInternalException("expected MetaCDT");
         }
@@ -56,9 +47,9 @@ public abstract class ETNode {
         return (MetaCDT)data;
     }
 
-    protected final CDT executeMetaSafe() {
+    protected final CDT executeMetaSafe(CraterVariableScope scope) {
         this.pushFrame();
-        CDT value = this.execute().metaSafe();
+        CDT value = this.execute(scope).metaSafe();
         if (this.hasTypeEnforcement()) {
             if (this.typeEnforcer.isCorrectType(value)) {
                 this.popFrame();

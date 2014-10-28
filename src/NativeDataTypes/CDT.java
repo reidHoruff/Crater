@@ -4,6 +4,7 @@ package NativeDataTypes;
  * Created by reidhoruff on 10/8/14.
  */
 
+import BuiltinFunctions.CBuiltinMemberFunction;
 import Exceptions.CraterExecutionException;
 import Exceptions.CraterInvalidSimpleOperationException;
 
@@ -152,6 +153,23 @@ public abstract class CDT {
 
     public CDT siIndex(CDT index) {
         throw new CraterExecutionException(this.getTypeName() + " cannot be indexed by type " + index.getTypeName());
+    }
+
+    public CDT siInstantiate(ArrayList<CDT> arguments) {
+        throw new CraterExecutionException(this.getTypeName() + " cannot be instantiated");
+    }
+
+    public CDT siAccessMember(String identifier) {
+        if (identifier.equals("to_s")) {
+            return new CBuiltinMemberFunction(this) {
+                @Override
+                public CDT callWithArguments(ArrayList<CDT> values) {
+                    return new CString(this.host.toString());
+                }
+            };
+        }
+
+        throw new CraterExecutionException("Cannot access member '" + identifier + "' of [" + getTypeName() + "]");
     }
 
     @Override

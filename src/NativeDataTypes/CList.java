@@ -1,5 +1,6 @@
 package NativeDataTypes;
 
+import BuiltinFunctions.CBuiltinMemberFunction;
 import Exceptions.CraterExecutionException;
 
 import java.util.ArrayList;
@@ -17,7 +18,7 @@ public class CList extends AbstractCIndexable {
     }
 
     public CList addCDT(CDT item) {
-        this.items.add(new MetaCDT(item));
+        this.items.add(item.withMetaWrapper());
         return this;
     }
 
@@ -96,11 +97,38 @@ public class CList extends AbstractCIndexable {
     }
 
     @Override
+    public CDT siPlusEquals(CDT other) {
+        this.addCDT(other);
+        return this;
+    }
+
+    @Override
     public CDT siIndex(CDT index) {
         if (index instanceof CInteger) {
             return this.singleValueListAccess(index.toInt());
         }
         return super.siIndex(index);
+    }
+
+    @Override
+    public CDT siAccessMember(String identifier) {
+        if (identifier.equals("length")) {
+            return this.length();
+        }
+
+        if (identifier.equals("append")) {
+            return new CBuiltinMemberFunction(this) {
+                @Override
+                public CDT callWithArguments(ArrayList<CDT> values) {
+                    for (CDT value : values) {
+                        this.host.siPlusEquals(value);
+                    }
+                    return this.host;
+                }
+            };
+        }
+
+        return super.siAccessMember(identifier);
     }
 
     public CList rangeListAccess(CRange range) {

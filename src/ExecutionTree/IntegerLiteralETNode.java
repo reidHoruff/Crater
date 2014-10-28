@@ -20,10 +20,7 @@ public class IntegerLiteralETNode extends ETNode {
         this.value = value;
     }
 
-    public CDT execute() {
+    public CDT execute(CraterVariableScope scope) {
         return new CInteger(this.value);
-    }
-
-    public void setChildrenVariableScope(CraterVariableScope scope) {
     }
 }

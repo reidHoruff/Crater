@@ -1,5 +1,9 @@
 package NativeDataTypes;
 
+import BuiltinFunctions.CBuiltinMemberFunction;
+
+import java.util.ArrayList;
+
 /**
  * Created by reidhoruff on 10/13/14.
  */
@@ -27,6 +31,23 @@ public class CRange extends CDT{
             len += 1;
         }
         return len;
+    }
+
+    @Override
+    public CDT siAccessMember(String identifier) {
+        /**
+         * expand()
+         * generates list
+         */
+        if (identifier.equals("expand")) {
+            return new CBuiltinMemberFunction(this) {
+                @Override
+                public CDT callWithArguments(ArrayList<CDT> values) {
+                    return ((CRange)this.host).generateList();
+                }
+            };
+        }
+        return super.siAccessMember(identifier);
     }
 
     @Override
