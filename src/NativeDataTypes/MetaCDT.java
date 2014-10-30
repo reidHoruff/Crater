@@ -1,5 +1,7 @@
 package NativeDataTypes;
 
+import Exceptions.CraterExecutionException;
+
 /**
  * Created by reidhoruff on 10/9/14.
  *
@@ -25,6 +27,7 @@ package NativeDataTypes;
 public class MetaCDT extends CDT {
 
     protected CDT data;
+    protected boolean isFinal;
 
     protected MetaCDT(CDT data) {
         this.data = data;
@@ -38,7 +41,17 @@ public class MetaCDT extends CDT {
         return this.data.metaSafe();
     }
 
+    public MetaCDT setFinal(boolean isFinal) {
+        this.isFinal = isFinal;
+        // for chaining
+        return this;
+    }
+
     public void setData(CDT data) {
+        if (this.isFinal) {
+            throw new CraterExecutionException("cannot reassign final variable");
+        }
+
         if (data instanceof MetaCDT) {
             System.err.println("Warning: nested MetaCDT");
         }

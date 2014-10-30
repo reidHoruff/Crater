@@ -38,6 +38,9 @@ public class FunctionCallETNode extends ETNode {
 
         CExecSingleton.get().getCallStack().push(stackFrame);
 
+        /**
+         * make call
+         */
         CDT returnValue = functionRef.callWithArguments(argumentValues);
 
         CExecSingleton.get().getCallStack().pop();

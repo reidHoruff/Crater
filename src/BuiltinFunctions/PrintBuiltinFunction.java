@@ -11,11 +11,11 @@ import java.util.ArrayList;
 /**
  * Created by reidhoruff on 10/13/14.
  */
-public class PrintBuiltinFunction extends CFunction {
+public class PrintBuiltinFunction extends CBuiltinFunction {
+
     private boolean newLine;
 
     public PrintBuiltinFunction(boolean newLine) {
-        super(null);
         this.newLine = newLine;
     }
 

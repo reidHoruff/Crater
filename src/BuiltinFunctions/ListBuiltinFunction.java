@@ -9,7 +9,7 @@ import java.util.ArrayList;
  */
 public class ListBuiltinFunction extends CFunction {
     public ListBuiltinFunction() {
-        super(null);
+        super();
     }
 
     @Override

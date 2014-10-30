@@ -4,6 +4,7 @@ import BuiltinFunctions.CBuiltinFunction;
 import BuiltinFunctions.CBuiltinMemberFunction;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
 /**
  * Created by reidhoruff on 10/8/14.
@@ -38,6 +39,14 @@ public class CInteger extends CDT {
             return new CInteger(this.intValue * other.toInt());
         }
         return super.siMultiply(other);
+    }
+
+    @Override
+    public CDT siCompareTo(CDT other) {
+        if (other instanceof CInteger) {
+            return new CInteger(this.intValue - other.toInt());
+        }
+        return super.siCompareTo(other);
     }
 
     @Override
@@ -89,7 +98,35 @@ public class CInteger extends CDT {
                 }
             };
         }
+
+        if (identifier.equals("_inc")) {
+            return new CBuiltinMemberFunction(this) {
+                @Override
+                public CDT callWithArguments(ArrayList<CDT> values) {
+                    ((CInteger)this.host).increment();
+                    return this.host;
+                }
+            };
+        }
+
+        if (identifier.equals("dec")) {
+            return new CBuiltinMemberFunction(this) {
+                @Override
+                public CDT callWithArguments(ArrayList<CDT> values) {
+                    ((CInteger)this.host).deincrement();
+                    return this.host;
+                }
+            };
+        }
         return super.siAccessMember(identifier);
+    }
+
+    public void increment() {
+        this.intValue += 1;
+    }
+
+    public void deincrement() {
+        this.intValue -= 1;
     }
 
     @Override
@@ -135,12 +172,21 @@ public class CInteger extends CDT {
 
     @Override
     public String getTypeName() {
-        return "int";
+        return "integer";
     }
 
     @Override
     public int hashCode() {
         return this.intValue;
+    }
+
+    @Override
+    public CDT siContains(CDT other) {
+        if (other instanceof CInteger) {
+            return new CBoolean(this.intValue % ((CInteger) other).intValue == 0);
+        }
+
+        return super.siContains(other);
     }
 
     @Override

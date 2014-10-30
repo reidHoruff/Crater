@@ -16,12 +16,14 @@ public class CDict extends AbstractCIndexable {
     }
 
     public MetaCDT put(CDT key, CDT value) {
-        if (value instanceof  MetaCDT) {
-            throw new CraterInternalException("hey, don't sent me a MetaCDT, I do that my self!");
-        }
         MetaCDT wrapper = value.withMetaWrapper();
         this.dictionary.put(key, wrapper);
         return wrapper;
+    }
+
+    public MetaCDT directPut(CDT key, MetaCDT value) {
+        this.dictionary.put(key, value);
+        return value;
     }
 
     public CDT get(CDT key) {

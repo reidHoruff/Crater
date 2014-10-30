@@ -48,6 +48,13 @@ public class ForLoopETNode extends ETNode {
                 scope.nonRecursiveSetValue(this.variableIdent, key);
                 lastValue = this.body.executeMetaSafe(scope);
             }
+        } else if (expression instanceof CList) {
+            CList list = expression.toCList();
+            for (CDT value : list.getItems()) {
+                if (this.isExecutionBroken) break;
+                scope.nonRecursiveSetValue(this.variableIdent, value);
+                lastValue = this.body.executeMetaSafe(scope);
+            }
         } else {
             throw new CraterExecutionException("invalid expression type for for loop");
         }

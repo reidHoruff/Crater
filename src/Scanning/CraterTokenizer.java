@@ -41,11 +41,13 @@ public class CraterTokenizer {
         //add("\\{\\-.*\\-\\}", TokenType.R_COMMENT);
         add("int", TokenType.KW_INT);
         add("class", TokenType.KW_CLASS);
+        add("new", TokenType.KW_NEW);
         add("init", TokenType.KW_INIT);
         add("bool", TokenType.KW_BOOL);
         add("list", TokenType.KW_LIST);
         add("true", TokenType.KW_TRUE);
         add("inf", TokenType.KW_INF);
+        add("var", TokenType.KW_VAR);
         add("final", TokenType.KW_FINAL);
         add("ninf", TokenType.KW_NINF);
         add("ret(urn)?", TokenType.KW_RETURN);
@@ -54,7 +56,7 @@ public class CraterTokenizer {
         add("in", TokenType.KW_IN);
         add("is", TokenType.KW_IS);
         add("by", TokenType.KW_BY);
-        add("else", TokenType.KW_ELSE);
+        add("el(se)?", TokenType.KW_ELSE);
         add("for", TokenType.KW_FOR);
         add("while", TokenType.KW_WHILE);
         add("none", TokenType.KW_NONE);
@@ -67,6 +69,7 @@ public class CraterTokenizer {
         add("\\.\\.\\.", TokenType.D_THREE_DOTS);
         add("\\.\\.", TokenType.D_TWO_DOTS);
         add("\\.", TokenType.C_PERIOD);
+        add("\\?", TokenType.C_QUESTION);
         add("xor", TokenType.KW_XOR);
         add("\\+=", TokenType.D_PLUS_EQUALS);
         add("\\->", TokenType.D_DASH_GT);
@@ -84,6 +87,7 @@ public class CraterTokenizer {
         add("==", TokenType.D_DOUBLE_EQUALS);
         add("=", TokenType.C_EQUALS);
         add(";", TokenType.C_SEMICOL);
+        add("::", TokenType.D_DBL_COLON);
         add(":", TokenType.C_COLON);
         add("\\{", TokenType.C_LCURLEY);
         add("\\}", TokenType.C_RCURLEY);
@@ -91,7 +95,7 @@ public class CraterTokenizer {
         add("\\>", TokenType.C_GREATERTHAN);
         add("[1-9][0-9]*\\.[0-9]+", TokenType.R_FLOAT);
         add("-?[0-9]+", TokenType.R_INT);
-        add("[a-zA-Z][a-zA-Z0-9_]*", TokenType.R_IDENT);
+        add("[a-zA-Z_][a-zA-Z0-9_]*", TokenType.R_IDENT);
         add("\\@[a-zA-Z][a-zA-Z0-9_]*", TokenType.R_ATOM);
     }
 

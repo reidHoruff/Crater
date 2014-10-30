@@ -47,7 +47,10 @@ public abstract class ETNode {
         return (MetaCDT)data;
     }
 
-    protected final CDT executeMetaSafe(CraterVariableScope scope) {
+    /**
+     * public so that CFunction has access...
+     */
+    public final CDT executeMetaSafe(CraterVariableScope scope) {
         this.pushFrame();
         CDT value = this.execute(scope).metaSafe();
         if (this.hasTypeEnforcement()) {

@@ -37,22 +37,11 @@ public class CExecSingleton {
     }
 
     public void executeProgram() {
-        CExecSingleton.loadBuiltinFunctions(this.rootVariableScope);
         /**
          * extend root variable scope before
          * anything acts on it so that it only contains
          */
         this.rootStatementList.execute(rootVariableScope.extend());
-    }
-
-    private static void loadBuiltinFunctions(CraterVariableScope rootScope) {
-        clog.m("loading builtin functions...");
-        rootScope.nonRecursiveSetValue("len", new LengthBuiltinFunction());
-        rootScope.nonRecursiveSetValue("map", new MapBuiltinFunction());
-        rootScope.nonRecursiveSetValue("puts", new PrintBuiltinFunction(false));
-        rootScope.nonRecursiveSetValue("put", new PrintBuiltinFunction(true));
-        rootScope.nonRecursiveSetValue("gets", new GetStringBuiltinFunction());
-        rootScope.nonRecursiveSetValue("list", new ListBuiltinFunction());
     }
 
     public Stack<ExecutionStackFrame> getStatementStack() {

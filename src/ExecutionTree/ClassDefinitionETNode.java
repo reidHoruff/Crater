@@ -2,10 +2,7 @@ package ExecutionTree;
 
 import CraterExecutionEnvironment.CExecSingleton;
 import CraterExecutionEnvironment.CraterVariableScope;
-import NativeDataTypes.CClass;
-import NativeDataTypes.CDT;
-import NativeDataTypes.CInstance;
-import NativeDataTypes.MetaCDT;
+import NativeDataTypes.*;
 import Scanning.Token;
 import com.sun.org.apache.xerces.internal.impl.dv.xs.IDDV;
 
@@ -19,35 +16,27 @@ public class ClassDefinitionETNode extends ETNode {
     private ArrayList<ETNode> children;
     private ETNode constructor;
     private boolean isExecutionBroken = false;
-    private CraterVariableScope staticScope;
+    private CClass cclass;
 
-    public ClassDefinitionETNode() {
-        this.children = new ArrayList<ETNode>();
+    public ClassDefinitionETNode(String className) {
+        this.cclass = new CClass(className);
     }
 
-    public void add(ETNode child) {
-        if (child != null) {
-            child.setParent(this);
-            this.children.add(child);
-        }
+    public void addFunction(ETNode child) {
+        this.cclass.addFunction(child.setParent(this));
+    }
+
+    public void addVariable(ETNode child) {
+        this.cclass.addVariable(child.setParent(this));
     }
 
     public void setConstructor(ETNode constructor) {
-        this.constructor = constructor.setParent(this);
+        this.cclass.setConstructor(constructor);
     }
 
     @Override
     public CDT execute(CraterVariableScope scope) {
-        this.staticScope = new CraterVariableScope(CExecSingleton.get().getRootVariableScope());
-
-        for (ETNode member: this.children) {
-            member.executeMetaSafe(this.staticScope);
-        }
-
-        return new CClass(this, this.staticScope);
-    }
-
-    public CInstance construct(ArrayList<CDT> arguments) {
-        
+        this.cclass.setStaticScope(scope.extend());
+        return this.cclass.execute();
     }
 }

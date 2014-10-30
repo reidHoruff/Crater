@@ -14,7 +14,7 @@ import java.util.ArrayList;
  * Crater Data Type
  */
 
-public abstract class CDT {
+public abstract class CDT implements Comparable<CDT> {
     public String toString() {
         return "CDT";
     }
@@ -148,7 +148,7 @@ public abstract class CDT {
     }
 
     public CDT siIs(CDT other) {
-        return this.siMutuallyEqualTo(other);
+        return new CBoolean(this == other);
     }
 
     public CDT siIndex(CDT index) {
@@ -156,10 +156,23 @@ public abstract class CDT {
     }
 
     public CDT siInstantiate(ArrayList<CDT> arguments) {
-        throw new CraterExecutionException(this.getTypeName() + " cannot be instantiated");
+        throw new CraterExecutionException("[" + this.getTypeName() + "] cannot be instantiated");
+    }
+
+    public CDT siCompareTo(CDT other) {
+        throw new CraterExecutionException("cannot compare [" + this.getTypeName() + "] with [" + other.getTypeName() + "]");
     }
 
     public CDT siAccessMember(String identifier) {
+        if (identifier.equals("new")) {
+            return new CBuiltinMemberFunction(this) {
+                @Override
+                public CDT callWithArguments(ArrayList<CDT> values) {
+                    return this.host.siInstantiate(values);
+                }
+            };
+        }
+
         if (identifier.equals("to_s")) {
             return new CBuiltinMemberFunction(this) {
                 @Override
@@ -169,7 +182,31 @@ public abstract class CDT {
             };
         }
 
-        throw new CraterExecutionException("Cannot access member '" + identifier + "' of [" + getTypeName() + "]");
+        if (identifier.equals("put")) {
+            return new CBuiltinMemberFunction(this) {
+                @Override
+                public CDT callWithArguments(ArrayList<CDT> values) {
+                    System.out.println("::" + this.host.toString());
+                    return CNone.get();
+                }
+            };
+        }
+
+        if (identifier.equals("get_t")) {
+            return new CBuiltinMemberFunction(this) {
+                @Override
+                public CDT callWithArguments(ArrayList<CDT> values) {
+                    return new CString(this.host.getTypeName());
+                }
+            };
+        }
+
+        throw new CraterExecutionException("[" + getTypeName() + "] has no member [" + identifier + "]");
+    }
+
+    @Override
+    public int compareTo(CDT other) {
+        return this.siCompareTo(other).toInt();
     }
 
     @Override

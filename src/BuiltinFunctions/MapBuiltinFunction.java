@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class MapBuiltinFunction extends CFunction {
 
     public MapBuiltinFunction() {
-        super(null);
+        super();
     }
 
     @Override

@@ -14,7 +14,7 @@ import java.util.Scanner;
 public class GetStringBuiltinFunction extends CFunction {
 
     public GetStringBuiltinFunction() {
-        super(null);
+        super();
     }
 
     @Override

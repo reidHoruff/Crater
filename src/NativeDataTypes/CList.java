@@ -4,6 +4,8 @@ import BuiltinFunctions.CBuiltinMemberFunction;
 import Exceptions.CraterExecutionException;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * Created by reidhoruff on 10/8/14.
@@ -24,6 +26,10 @@ public class CList extends AbstractCIndexable {
 
     public CDT length() {
         return new CInteger(this.items.size());
+    }
+
+    public ArrayList<MetaCDT> getItems() {
+        return items;
     }
 
     @Override
@@ -128,7 +134,98 @@ public class CList extends AbstractCIndexable {
             };
         }
 
+        if (identifier.equals("map")) {
+            return new CBuiltinMemberFunction(this) {
+                @Override
+                public CDT callWithArguments(ArrayList<CDT> values) {
+                    CDT lam = values.get(0);
+                    CList map = new CList();
+                    for (CDT value : ((CList)this.host).getItems()) {
+                        map.addCDT(lam.callWithSingleArgument(value.metaSafe()));
+                    }
+                    return map;
+                }
+            };
+        }
+
+        if (identifier.equals("each")) {
+            return new CBuiltinMemberFunction(this) {
+                @Override
+                public CDT callWithArguments(ArrayList<CDT> values) {
+                    CDT lam = values.get(0);
+                    for (CDT value : ((CList)this.host).getItems()) {
+                        lam.toCFunction().callWithSingleArgument(value);
+                    }
+                    return CNone.get();
+                }
+            };
+        }
+
+        if (identifier.equals("empty")) {
+            return new CBuiltinMemberFunction(this) {
+                @Override
+                public CDT callWithArguments(ArrayList<CDT> values) {
+                    return new CBoolean(((CList)this.host).isEmpty());
+                }
+            };
+        }
+
+        if (identifier.equals("sort")) {
+            return new CBuiltinMemberFunction(this) {
+                @Override
+                public CDT callWithArguments(ArrayList<CDT> values) {
+                    ((CList)this.host).sort();
+                    return this.host;
+                }
+            };
+        }
+
+        if (identifier.equals("head")) {
+            return new CBuiltinMemberFunction(this) {
+                @Override
+                public CDT callWithArguments(ArrayList<CDT> values) {
+                    return ((CList)this.host).head();
+                }
+            };
+        }
+
+        if (identifier.equals("tail")) {
+            return new CBuiltinMemberFunction(this) {
+                @Override
+                public CDT callWithArguments(ArrayList<CDT> values) {
+                    return ((CList)this.host).tail();
+                }
+            };
+        }
+
+        if (identifier.equals("shuffle")) {
+            return new CBuiltinMemberFunction(this) {
+                @Override
+                public CDT callWithArguments(ArrayList<CDT> values) {
+                    ((CList)this.host).shuffle();
+                    return this.host;
+                }
+            };
+        }
+
         return super.siAccessMember(identifier);
+    }
+
+    public void shuffle() {
+        Collections.shuffle(this.items);
+    }
+
+    public void sort() {
+        Collections.sort(this.items, new Comparator<MetaCDT>() {
+            @Override
+            public int compare(MetaCDT o1, MetaCDT o2) {
+                return o1.metaSafe().siCompareTo(o2.metaSafe()).toInt();
+            }
+        });
+    }
+
+    public boolean isEmpty() {
+        return this.items.isEmpty();
     }
 
     public CList rangeListAccess(CRange range) {
@@ -137,6 +234,14 @@ public class CList extends AbstractCIndexable {
             newList.addCDT(this.getElementMetaSafe(x).clone());
         }
         return newList;
+    }
+
+    public CDT head() {
+        return singleValueListAccess(0);
+    }
+
+    public CDT tail() {
+        return singleValueListAccess(this.getLength()-1);
     }
 
     public CDT singleValueListAccess(int index) {

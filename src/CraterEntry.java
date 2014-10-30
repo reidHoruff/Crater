@@ -10,7 +10,7 @@ import java.io.File;
 
 public class CraterEntry {
     public static void main(String args[]) {
-        CraterTokenizer tokenizer = new CraterTokenizer(new File("test.cr"));
+        CraterTokenizer tokenizer = new CraterTokenizer(new File("test2.cr"));
         new CraterParser(tokenizer);
         CExecSingleton.get().executeProgram();
     }

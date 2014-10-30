@@ -62,4 +62,7 @@ public enum TokenType {
     C_PERIOD,
     KW_INIT,
     KW_NEW,
+    C_QUESTION,
+    D_DBL_COLON,
+    KW_VAR,
 }

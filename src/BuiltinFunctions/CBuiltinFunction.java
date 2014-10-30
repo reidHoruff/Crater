@@ -1,6 +1,8 @@
 package BuiltinFunctions;
 
+import CraterExecutionEnvironment.CraterVariableScope;
 import ExecutionTree.FunctionDefinitionETNode;
+import NativeDataTypes.CDT;
 import NativeDataTypes.CFunction;
 
 /**
@@ -8,6 +10,16 @@ import NativeDataTypes.CFunction;
  */
 public abstract class CBuiltinFunction extends CFunction {
     public CBuiltinFunction() {
-        super(null);
+        super();
+    }
+
+    @Override
+    public void setScope(CraterVariableScope scope) {
+        //pass...
+    }
+
+    @Override
+    public CFunction cloneWithScope(CraterVariableScope scope) {
+        return this;
     }
 }
