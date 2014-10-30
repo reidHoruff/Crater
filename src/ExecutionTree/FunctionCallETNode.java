@@ -22,6 +22,18 @@ public class FunctionCallETNode extends ETNode {
         }
     }
 
+    /**
+     * all this does is evaluate
+     * the parameter values withing the scope
+     * from which the function was called
+     *
+     * these values are then sent over to the CFunction DT
+     * where a new scope is created (extending from the scope from which
+     * the function was defined.
+     *
+     * these parameter values are then injected into this newly created
+     * scope.
+     */
     @Override
     public CDT execute(CraterVariableScope scope) {
         /** mark stack frame */
@@ -30,6 +42,7 @@ public class FunctionCallETNode extends ETNode {
         CDT functionRef = this.functionReference.executeMetaSafe(scope);
 
         ArrayList<CDT> argumentValues = new ArrayList<CDT>(5);
+
         for (ETNode parameterExpression : this.parameters) {
             CDT parametervalue = parameterExpression.executeMetaSafe(scope);
             stackFrame.addParameterCallingType(parametervalue);

@@ -30,7 +30,7 @@ public class CFunction extends CDT {
             /**
              * use cloneWithScope...
              */
-            throw new CraterInternalException("cannot modify scope of existi function");
+            throw new CraterInternalException("cannot modify scope of existing function");
         }
         this.scope = scope;
     }
@@ -51,13 +51,24 @@ public class CFunction extends CDT {
         return "function";
     }
 
+    /**
+     * all you need to do is supply with arguments.
+     * this will handle creting a new variable scope
+     * (extending from the scope which the function was defined inside of)
+     * for the function to execute inside of.
+     *
+     * eg so recursive calls don't write over
+     * variables that are defined within the function.
+     */
     @Override
     public CDT callWithArguments(ArrayList<CDT> values) {
         /**
          * create own variable scope (stack frame like)
          * then call.
          */
-        return this.cloneWithScope(this.scope.extend()).callWithArgumentsInternal(values);
+        CraterVariableScope callInstanceScope = this.scope.extend();
+
+        return this.cloneWithScope(callInstanceScope).callWithArgumentsInternal(values);
     }
 
     private CDT callWithArgumentsInternal(ArrayList<CDT> argumentValues) {
