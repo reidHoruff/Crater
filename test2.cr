@@ -5,18 +5,22 @@ class rain {
 
     fun set_name |name| -> {
         this.name = name
-        static.names.append(name)
+        ret this
     }
 
-    fun print_name || -> {
-        this.name.put()
-    }
+    fun add_inst || -> static.names.append(this)
 }
 
-rain.new().set_name("reid")
-rain.new().set_name("bob")
-rain.new().set_name("alex")
+var a = rain.new()
+a.set_name("reid").add_inst()
+var b = rain.new()
+b.set_name("bob").add_inst()
+var c = rain.new()
+c.set_name("alex").add_inst()
 
-rain.names.each(|name|->name.put())
-for n in rain.new().static.names n.put()
+a.set_name("foo")
+
+for n in rain.names {
+    n.name.put()
+}
 

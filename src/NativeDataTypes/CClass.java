@@ -12,7 +12,7 @@ public class CClass extends CDT {
     private CraterVariableScope staticScope;
     private String className;
     private ArrayList<ETNode> functions, variables;
-    private ETNode constructor;
+    private ETNode constructorDefinition;
 
     public CClass(String className) {
         this.className = className;
@@ -29,8 +29,8 @@ public class CClass extends CDT {
         this.variables.add(child);
     }
 
-    public void setConstructor(ETNode constructor) {
-        this.constructor = constructor;
+    public void setConstructorDefinition(ETNode constructor) {
+        this.constructorDefinition = constructor;
     }
 
     public void setStaticScope(CraterVariableScope scope) {
@@ -52,8 +52,8 @@ public class CClass extends CDT {
     }
 
     public CClass executeOnScope(CraterVariableScope scope) {
-        if (this.constructor != null) {
-            this.constructor.executeMetaSafe(scope);
+        if (this.constructorDefinition != null) {
+            this.constructorDefinition.executeMetaSafe(scope);
         }
 
         for (ETNode variableDefinition: this.variables) {

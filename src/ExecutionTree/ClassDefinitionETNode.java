@@ -1,10 +1,7 @@
 package ExecutionTree;
 
-import CraterExecutionEnvironment.CExecSingleton;
 import CraterExecutionEnvironment.CraterVariableScope;
 import NativeDataTypes.*;
-import Scanning.Token;
-import com.sun.org.apache.xerces.internal.impl.dv.xs.IDDV;
 
 import java.util.ArrayList;
 
@@ -31,7 +28,7 @@ public class ClassDefinitionETNode extends ETNode {
     }
 
     public void setConstructor(ETNode constructor) {
-        this.cclass.setConstructor(constructor);
+        this.cclass.setConstructorDefinition(constructor);
     }
 
     @Override

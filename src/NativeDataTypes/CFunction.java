@@ -2,6 +2,7 @@ package NativeDataTypes;
 
 import CraterExecutionEnvironment.CraterVariableScope;
 import Exceptions.CraterExecutionException;
+import Exceptions.CraterInternalException;
 import ExecutionTree.ETNode;
 import ExecutionTree.FunctionDefinitionETNode;
 
@@ -25,6 +26,12 @@ public class CFunction extends CDT {
     }
 
     public void setScope(CraterVariableScope scope) {
+        if (this.scope != null) {
+            /**
+             * use cloneWithScope...
+             */
+            throw new CraterInternalException("cannot modify scope of existi function");
+        }
         this.scope = scope;
     }
 
