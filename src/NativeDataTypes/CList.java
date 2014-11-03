@@ -1,6 +1,7 @@
 package NativeDataTypes;
 
 import BuiltinFunctions.CBuiltinMemberFunction;
+import CraterExecutionEnvironment.CraterVariableScope;
 import Exceptions.CraterExecutionException;
 
 import java.util.ArrayList;
@@ -117,7 +118,7 @@ public class CList extends AbstractCIndexable {
     }
 
     @Override
-    public CDT siAccessMember(String identifier) {
+    public CDT siAccessMember(String identifier, CraterVariableScope accessor) {
         if (identifier.equals("length")) {
             return this.length();
         }
@@ -208,7 +209,7 @@ public class CList extends AbstractCIndexable {
             };
         }
 
-        return super.siAccessMember(identifier);
+        return super.siAccessMember(identifier, accessor);
     }
 
     public void shuffle() {

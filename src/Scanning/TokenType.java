@@ -65,4 +65,9 @@ public enum TokenType {
     C_QUESTION,
     D_DBL_COLON,
     KW_VAR,
+    KW_STATIC,
+    KW_PRIVATE,
+    KW_THIS,
+    KW_NOT,
+    D_NOT_EQUAL,
 }

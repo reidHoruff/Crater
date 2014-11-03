@@ -145,6 +145,19 @@ public class CraterVariableScope {
         return null;
     }
 
+    public boolean isOrIsDescendentOf(CraterVariableScope scope) {
+        CraterVariableScope curr = this;
+
+        while (curr != null) {
+            if (scope == curr) {
+                return true;
+            }
+            curr = curr.parentScope;
+        }
+
+        return false;
+    }
+
     public MetaCDT getVariableReference(String identifier) {
 
         MetaCDT result = this.recursivelyFind(identifier);

@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class CClass extends CDT {
     private CraterVariableScope staticScope;
     private String className;
-    private ArrayList<ETNode> functions, variables;
+    private ArrayList<ETNode> functions, variables, staticFunctions, staticPrivateFunctions;
     private ETNode constructorDefinition;
 
     public CClass(String className) {
@@ -19,10 +19,21 @@ public class CClass extends CDT {
 
         this.functions = new ArrayList<ETNode>();
         this.variables = new ArrayList<ETNode>();
+
+        this.staticFunctions = new ArrayList<ETNode>();
+        this.staticPrivateFunctions = new ArrayList<ETNode>();
     }
 
     public void addFunction(ETNode child) {
         this.functions.add(child);
+    }
+
+    public void addStaticFunction(ETNode child) {
+        this.staticFunctions.add(child);
+    }
+
+    public void addStaticPrivateFunction(ETNode child) {
+        this.staticPrivateFunctions.add(child);
     }
 
     public void addVariable(ETNode child) {
@@ -64,16 +75,30 @@ public class CClass extends CDT {
             functionDefinition.executeMetaSafe(scope);
         }
 
+        for (ETNode function: this.staticFunctions) {
+            function.executeMetaSafe(scope);
+        }
+
+        for (ETNode function: this.staticPrivateFunctions) {
+            function.executeMetaSafe(scope);
+        }
+
         return this;
     }
 
     @Override
-    public CDT siAccessMember(String identifier) {
+    public CDT siAccessMember(String identifier, CraterVariableScope accessor) {
+        if (accessor.isOrIsDescendentOf(this.staticScope)) {
+            System.out.println("PUBLIC ACCESS");
+        } else {
+            System.out.println("PRIVATE ACCESS");
+        }
+
         if (this.staticScope.recursiveHasVariable(identifier)) {
             return this.staticScope.getVariableReference(identifier);
         }
 
-        return super.siAccessMember(identifier);
+        return super.siAccessMember(identifier, accessor);
     }
 
     public String getClassName() {

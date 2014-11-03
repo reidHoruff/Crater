@@ -13,4 +13,8 @@ public class CraterInvalidSimpleOperationException extends CraterExecutionExcept
     public CraterInvalidSimpleOperationException(String operation, CDT l, CDT r) {
         super("<Cannot Execute [" + l.getTypeName() + " " + operation + " " + r.getTypeName() + "] - Invalid Operand Types>");
     }
+
+    public CraterInvalidSimpleOperationException(String operation, CDT r) {
+        super("<Cannot Execute "  + operation + " [" + r.getTypeName() + "] - Invalid Operand Type>");
+    }
 }

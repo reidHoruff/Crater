@@ -31,11 +31,11 @@ public class CInstance extends CDT {
     }
 
     @Override
-    public CDT siAccessMember(String identifier) {
+    public CDT siAccessMember(String identifier, CraterVariableScope accessor) {
         if (this.instanceScope.recursiveHasVariable(identifier)) {
             return this.instanceScope.getVariableReference(identifier);
         }
 
-        return super.siAccessMember(identifier);
+        return super.siAccessMember(identifier, accessor);
     }
 }

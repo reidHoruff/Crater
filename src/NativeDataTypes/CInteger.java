@@ -1,10 +1,9 @@
 package NativeDataTypes;
 
-import BuiltinFunctions.CBuiltinFunction;
 import BuiltinFunctions.CBuiltinMemberFunction;
+import CraterExecutionEnvironment.CraterVariableScope;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 
 /**
  * Created by reidhoruff on 10/8/14.
@@ -83,7 +82,7 @@ public class CInteger extends CDT {
     }
 
     @Override
-    public CDT siAccessMember(String identifier) {
+    public CDT siAccessMember(String identifier, CraterVariableScope accessor) {
         if (identifier.equals("each")) {
             return new CBuiltinMemberFunction(this) {
                 @Override
@@ -118,7 +117,7 @@ public class CInteger extends CDT {
                 }
             };
         }
-        return super.siAccessMember(identifier);
+        return super.siAccessMember(identifier, accessor);
     }
 
     public void increment() {
@@ -154,11 +153,28 @@ public class CInteger extends CDT {
     }
 
     @Override
+    public CDT siPlusEquals(CDT other) {
+        if (other instanceof CInteger) {
+            this.intValue += other.toInt();
+            return this;
+        }
+        return super.siPlusEquals(other);
+    }
+
+    @Override
     public CDT siMod(CDT other) {
         if (other instanceof CInteger) {
             return new CInteger(this.intValue % other.toInt());
         }
         return super.siMod(other);
+    }
+
+    @Override
+    public CDT siNotEqual(CDT other) {
+        if (other instanceof CInteger) {
+            return new CBoolean(this.intValue != other.toInt());
+        }
+        return super.siNotEqual(other);
     }
 
     /*

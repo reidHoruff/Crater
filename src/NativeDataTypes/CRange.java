@@ -1,6 +1,7 @@
 package NativeDataTypes;
 
 import BuiltinFunctions.CBuiltinMemberFunction;
+import CraterExecutionEnvironment.CraterVariableScope;
 
 import java.util.ArrayList;
 
@@ -34,7 +35,7 @@ public class CRange extends CDT{
     }
 
     @Override
-    public CDT siAccessMember(String identifier) {
+    public CDT siAccessMember(String identifier, CraterVariableScope accessor) {
         /**
          * expand()
          * generates list
@@ -47,7 +48,7 @@ public class CRange extends CDT{
                 }
             };
         }
-        return super.siAccessMember(identifier);
+        return super.siAccessMember(identifier, accessor);
     }
 
     @Override

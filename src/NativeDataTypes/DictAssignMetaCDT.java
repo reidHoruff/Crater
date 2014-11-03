@@ -1,5 +1,7 @@
 package NativeDataTypes;
 
+import CraterExecutionEnvironment.CraterVariableScope;
+
 /**
  * Created by reidhoruff on 10/14/14.
  */

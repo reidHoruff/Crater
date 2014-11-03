@@ -43,6 +43,7 @@ public class SimpleOperationETNode extends ETNode {
             case KW_CONTAINS: return l.siContains(r);
             case C_MOD: return l.siMod(r);
             case KW_IS: return l.siIs(r);
+            case D_NOT_EQUAL: return l.siNotEqual(r);
         }
 
         throw new CraterExecutionException("invalid operation symbol");

@@ -19,6 +19,6 @@ public class MemberAccessorETNode extends ETNode {
 
     @Override
     public CDT execute(CraterVariableScope scope) {
-        return this.accessee.executeMetaSafe(scope).siAccessMember(this.accessorName);
+        return this.accessee.executeMetaSafe(scope).siAccessMember(this.accessorName, scope);
     }
 }

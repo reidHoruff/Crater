@@ -1,28 +1,29 @@
 
 class rain {
-    var name = none
-    var names = []
 
-    fun set_name |name| -> {
-        this.name = name
-        ret this
+    var name = || -> this.say_hi()
+    var color = "red"
+
+    static fun call_me || -> {
+        var other = ["a", "b", "c"];
+
+        other = other.map(|x| -> x + " " + static.color);
+
+        other.put()
     }
 
-    fun hi |x| -> {
-        var y = x
-        y.put()
-        if x > 0
-            hi(x-1)
-        y.put()
+    fun say_hi || ->  {
+        if this is not static {
+            "saying hi from static".put()
+        } else {
+            "saying hi from object".put()
+        }
     }
-
-    fun add_inst || -> static.names.append(this)
 }
 
-fun hi |x| -> {
-    var y = x
-    if x > 0
-        hi(x-1)
-}
+rain.call_me();
+rain.say_hi()
+rain.new().say_hi();
 
-hi(2)
+(4 != 4).put();
+

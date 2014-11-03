@@ -34,6 +34,20 @@ public class CBoolean extends CDT {
     }
 
     @Override
+    public CDT siNot() {
+        return new CBoolean(!this.value);
+    }
+
+    @Override
+    public CDT siNotEqual(CDT other) {
+        if (other instanceof CBoolean) {
+            return new CBoolean(this.value != other.toBool());
+        }
+
+        return super.siNotEqual(other);
+    }
+
+    @Override
     public CDT siCompareTo(CDT other) {
         if (other instanceof CBoolean) {
             boolean v = other.toBool();
@@ -65,7 +79,6 @@ public class CBoolean extends CDT {
     public int hashCode() {
         return new Boolean(this.value).hashCode();
     }
-
 
     @Override
     public CDT siBooleanXor(CDT other) {

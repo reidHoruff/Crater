@@ -19,16 +19,8 @@ public class ClassDefinitionETNode extends ETNode {
         this.cclass = new CClass(className);
     }
 
-    public void addFunction(ETNode child) {
-        this.cclass.addFunction(child.setParent(this));
-    }
-
-    public void addVariable(ETNode child) {
-        this.cclass.addVariable(child.setParent(this));
-    }
-
-    public void setConstructor(ETNode constructor) {
-        this.cclass.setConstructorDefinition(constructor);
+    public CClass getCClass() {
+        return this.cclass;
     }
 
     @Override

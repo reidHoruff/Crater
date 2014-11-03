@@ -3,6 +3,7 @@ package Parsing;
 import CraterExecutionEnvironment.CExecSingleton;
 
 import CraterHelpers.clog;
+import Exceptions.CraterInternalException;
 import Exceptions.CraterParserException;
 import ExecutionTree.*;
 import NativeDataTypes.CAtom;
@@ -24,8 +25,13 @@ public class CraterParser {
     private Stack<Token> keptTokens;
     private Stack<ETNode> keptETNodes;
     private Stack<Integer> streamMarkerStack;
+    private int insideClass, insideFunction, insideStatic;
 
     public CraterParser(CraterTokenizer tokenizer) {
+        this.insideClass = 0;
+        this.insideFunction = 0;
+        this.insideStatic = 0;
+
         this.tokenStream = new Token[tokenizer.getTokens().size()];
         tokenizer.getTokens().toArray(this.tokenStream);
         this.currentTokenPointer = 0;
@@ -108,9 +114,10 @@ public class CraterParser {
     }
 
     /**
-     * class foobar {
+     * class foobar [:: baz] {
      *
      * }
+     *
      */
     private ETNode classDefinitionStatement() {
 
@@ -119,34 +126,49 @@ public class CraterParser {
         if (accept(TokenType.KW_CLASS)) {
             Token name = grabToken(TokenType.R_IDENT);
 
+            /**
             if (accept(TokenType.D_DBL_COLON)) {
                 Token baseIdent = grabToken(TokenType.R_IDENT);
             }
+             */
 
             expect(TokenType.C_LCURLEY);
+
+            enterClass();
 
             ClassDefinitionETNode classBody = new ClassDefinitionETNode(name.sequence);
 
             while (true) {
                 if (acceptThenKeepETNode(classConstructorStatement())) {
-                    classBody.setConstructor(popKeptETNode());
+                    classBody.getCClass().setConstructorDefinition(popKeptETNode());
                     continue;
                 }
 
                 if (acceptThenKeepETNode(variableDefinitionStatement())) {
-                    classBody.addVariable(popKeptETNode());
+                    classBody.getCClass().addVariable(popKeptETNode());
                     continue;
                 }
 
                 if (acceptThenKeepETNode(functionDefinitionStatement())) {
-                    classBody.addFunction(popKeptETNode());
+                    classBody.getCClass().addFunction(popKeptETNode());
                     continue;
                 }
 
+
+                if (acceptThenKeepETNode(staticFunctionDefinitionStatement())) {
+                    classBody.getCClass().addStaticFunction(popKeptETNode());
+                    continue;
+                }
+
+                if (acceptThenKeepETNode(privateStaticFunctionDefinitionStatement())) {
+                    classBody.getCClass().addStaticPrivateFunction(popKeptETNode());
+                    continue;
+                }
                 break;
             }
 
             expect(TokenType.C_RCURLEY);
+            exitClass();
 
             popTokenStreamMarker();
             return new IdentifierDefinitionETNode(name, classBody, true);
@@ -163,6 +185,7 @@ public class CraterParser {
         if (acceptThenKeepETNode(functionCallOrListDictReferenceOrIdentifierOrMember())) {
 
         }
+
         return null;
     }
 
@@ -194,6 +217,52 @@ public class CraterParser {
             return new IdentifierDefinitionETNode(name, functionDefinition, true);
         } else {
             popTokenStreamMarker();
+            return null;
+        }
+    }
+
+    /**
+     * stat fun foo || -> {}
+     */
+    private ETNode staticFunctionDefinitionStatement() {
+
+        pushTokenStreamMarker();
+
+        if (accept(TokenType.KW_STATIC)) {
+
+            enterStatic();
+
+            if(acceptThenKeepETNode(functionDefinitionStatement())) {
+
+                exitStatic();
+
+                popTokenStreamMarker();
+                return popKeptETNode();
+            } else {
+
+                exitStatic();
+
+                popTokenStreamMarkerAndRestore();
+                return null;
+            }
+        } else {
+            popTokenStreamMarkerAndRestore();
+            return null;
+        }
+    }
+
+    /**
+     * priv stat fun foo || -> {}
+     */
+    private ETNode privateStaticFunctionDefinitionStatement() {
+
+        pushTokenStreamMarker();
+
+        if (accept(TokenType.KW_PRIVATE) && acceptThenKeepETNode(staticFunctionDefinitionStatement())) {
+            popTokenStreamMarker();
+            return popKeptETNode();
+        } else {
+            popTokenStreamMarkerAndRestore();
             return null;
         }
     }
@@ -423,6 +492,13 @@ public class CraterParser {
         }
 
         /**
+         * not
+         */
+        else if (accept(TokenType.KW_NOT)) {
+            value = new NotETNode(some(expression()));
+        }
+
+        /**
          * (...)
          */
         else if (accept(TokenType.C_LPAREN)) {
@@ -595,8 +671,15 @@ public class CraterParser {
         ETNode value = null;
 
         if (acceptThenKeepSimpleOperator()) {
-            value = new SimpleOperationETNode(expression, popKeptToken(), some(expressionHead()));
+            Token operator = popKeptToken();
+            boolean not = (operator.token == TokenType.KW_IS && accept(TokenType.KW_NOT));
+            value = new SimpleOperationETNode(expression, operator, some(expressionHead()));
             value.setSpawningToken(peekMarkedToken());
+
+            /* 'is not' */
+            if (not) {
+                value = new NotETNode(value);
+            }
         }
 
         else if (acceptThenKeepETNode(rangeOperatorTail(expression))) {
@@ -674,10 +757,17 @@ public class CraterParser {
             expect(TokenType.C_PIPE);
             expect(TokenType.D_DASH_GT);
 
+            /**
+             * entering function body
+             */
+            enterFunction();
+
             if (acceptThenKeepETNode(statementListOrExpression())) {
+                exitFunction();
                 popTokenStreamMarker();
                 return new FunctionDefinitionETNode(parameterNames, popKeptETNode());
             } else {
+                exitFunction();
                 popTokenStreamMarkerAndRestore();
                 return null;
             }
@@ -743,11 +833,26 @@ public class CraterParser {
      * foo_bar
      */
     private ETNode identifierReference() {
+        /**
+         * static and this are key words but are also used referenced as variables at times... (within class[static]
+         * functions)
+         */
         if (acceptThenKeep(TokenType.R_IDENT)) {
             return new IdentifierReferenceETNode(popKeptToken());
-        } else {
-            return null;
         }
+
+        if (isInsideClass() && isInsideFunction()) {
+            if (isInsideStatic() && acceptThenKeep(TokenType.KW_STATIC)) {
+                return new IdentifierReferenceETNode(popKeptToken());
+            }
+
+            if (!isInsideStatic() && acceptThenKeep(TokenType.KW_STATIC, TokenType.KW_THIS)) {
+                return new IdentifierReferenceETNode(popKeptToken());
+            }
+
+        }
+
+        return null;
     }
 
     /**
@@ -974,7 +1079,8 @@ public class CraterParser {
                 TokenType.D_DOUBLE_EQUALS,
                 TokenType.KW_CONTAINS,
                 TokenType.C_MOD,
-                TokenType.KW_IS
+                TokenType.KW_IS,
+                TokenType.D_NOT_EQUAL
         );
     }
 
@@ -1114,7 +1220,7 @@ public class CraterParser {
         }
 
         // raises exception
-        throw new CraterParserException("Unacceptable token: " + getCurrentToken().token);
+        throw new CraterParserException("Unacceptable token: " + getCurrentToken().toString());
     }
 
     private boolean expect(TokenType... tokens) {
@@ -1147,5 +1253,53 @@ public class CraterParser {
         }
 
         return true;
+    }
+
+    private void enterFunction() {
+        this.insideFunction += 1;
+    }
+
+    private void exitFunction() {
+        this.insideFunction -= 1;
+
+        if (this.insideFunction < 0) {
+            throw new CraterInternalException("insideFunction < 0");
+        }
+    }
+
+    private boolean isInsideFunction() {
+        return this.insideFunction > 0;
+    }
+
+    private void enterClass() {
+        this.insideClass += 1;
+    }
+
+    private void exitClass() {
+        this.insideClass -= 1;
+
+        if (this.insideClass < 0) {
+            throw new CraterInternalException("insideClass < 0");
+        }
+    }
+
+    private boolean isInsideClass() {
+        return this.insideClass > 0;
+    }
+
+    private void enterStatic() {
+        this.insideStatic += 1;
+    }
+
+    private void exitStatic() {
+        this.insideStatic -= 1;
+
+        if (this.insideStatic < 0) {
+            throw new CraterInternalException("insideStatic < 0");
+        }
+    }
+
+    private boolean isInsideStatic() {
+        return this.insideStatic > 0;
     }
 }

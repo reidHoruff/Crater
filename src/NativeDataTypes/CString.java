@@ -1,6 +1,7 @@
 package NativeDataTypes;
 
 import BuiltinFunctions.CBuiltinMemberFunction;
+import CraterExecutionEnvironment.CraterVariableScope;
 import Scanning.Token;
 
 import java.util.ArrayList;
@@ -42,7 +43,7 @@ public class CString extends CDT {
     }
 
     @Override
-    public CDT siAccessMember(String identifier) {
+    public CDT siAccessMember(String identifier, CraterVariableScope accessor) {
         if (identifier.equals("length")) {
             return new CBuiltinMemberFunction(this) {
                 @Override
@@ -52,7 +53,7 @@ public class CString extends CDT {
             };
         }
 
-        return super.siAccessMember(identifier);
+        return super.siAccessMember(identifier, accessor);
     }
 
     @Override

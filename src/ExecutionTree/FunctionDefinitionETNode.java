@@ -21,6 +21,10 @@ public class FunctionDefinitionETNode extends ETNode {
 
     @Override
     public CDT execute(CraterVariableScope scope) {
+        /**
+         * create new function instance with
+         * scope context of where the function was defined
+         */
         return this.function.cloneWithScope(scope);
     }
 }

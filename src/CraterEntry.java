@@ -3,6 +3,8 @@
  */
 
 import CraterExecutionEnvironment.CExecSingleton;
+import NativeDataTypes.CDT;
+import NativeDataTypes.CInteger;
 import Parsing.CraterParser;
 import Scanning.*;
 

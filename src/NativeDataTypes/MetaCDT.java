@@ -1,5 +1,6 @@
 package NativeDataTypes;
 
+import CraterExecutionEnvironment.CraterVariableScope;
 import Exceptions.CraterExecutionException;
 
 /**
@@ -28,6 +29,7 @@ public class MetaCDT extends CDT {
 
     protected CDT data;
     protected boolean isFinal;
+    protected CraterVariableScope whiteList;
 
     protected MetaCDT(CDT data) {
         this.data = data;
@@ -41,6 +43,10 @@ public class MetaCDT extends CDT {
         return this.data.metaSafe();
     }
 
+    public void setWhiteList(CraterVariableScope scope) {
+        this.whiteList = scope;
+    }
+
     public MetaCDT setFinal(boolean isFinal) {
         this.isFinal = isFinal;
         // for chaining
@@ -52,10 +58,13 @@ public class MetaCDT extends CDT {
             throw new CraterExecutionException("cannot reassign final variable");
         }
 
-        if (data instanceof MetaCDT) {
-            System.err.println("Warning: nested MetaCDT");
+        /**
+        if (this.whiteList != null && !accessor.isOrIsDescendentOf(this.whiteList)) {
+            throw new CraterExecutionException("Cannot modify this this variable");
         }
-        this.data = data;
+         */
+
+        this.data = data.metaSafe();
     }
 
     @Override

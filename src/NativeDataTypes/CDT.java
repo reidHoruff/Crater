@@ -5,6 +5,7 @@ package NativeDataTypes;
  */
 
 import BuiltinFunctions.CBuiltinMemberFunction;
+import CraterExecutionEnvironment.CraterVariableScope;
 import Exceptions.CraterExecutionException;
 import Exceptions.CraterInvalidSimpleOperationException;
 
@@ -91,6 +92,14 @@ public abstract class CDT implements Comparable<CDT> {
         return new CBoolean(this == other);
     }
 
+    public CDT siNot() {
+        throw new CraterInvalidSimpleOperationException("not", this);
+    }
+
+    public CDT siNotEqual(CDT other) {
+        throw new CraterInvalidSimpleOperationException("!=", this, other);
+    }
+
     public CDT siContains(CDT other) {
         throw new CraterInvalidSimpleOperationException("contains", this, other);
     }
@@ -163,7 +172,7 @@ public abstract class CDT implements Comparable<CDT> {
         throw new CraterExecutionException("cannot compare [" + this.getTypeName() + "] with [" + other.getTypeName() + "]");
     }
 
-    public CDT siAccessMember(String identifier) {
+    public CDT siAccessMember(String identifier, CraterVariableScope accessor) {
         if (identifier.equals("new")) {
             return new CBuiltinMemberFunction(this) {
                 @Override
@@ -171,6 +180,10 @@ public abstract class CDT implements Comparable<CDT> {
                     return this.host.siInstantiate(values);
                 }
             };
+        }
+
+        if (identifier.equals("id")) {
+            return new CInteger(System.identityHashCode(this));
         }
 
         if (identifier.equals("to_s")) {
