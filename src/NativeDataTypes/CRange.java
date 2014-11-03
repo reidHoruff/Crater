@@ -10,9 +10,9 @@ import java.util.ArrayList;
  */
 public class CRange extends CDT{
 
-    public int head, tail, increment;
+    public CDT head, tail, increment;
 
-    public CRange(int head, int tail, int increment) {
+    public CRange(CDT head, CDT tail, CDT increment) {
         this.head = head;
         this.tail = tail;
         this.increment = increment;
@@ -20,18 +20,20 @@ public class CRange extends CDT{
 
     public CList generateList() {
         CList list = new CList();
-        for (int i = this.head; i < tail; i += this.increment) {
-            list.addCDT(new CInteger(i));
-        }
         return list;
     }
 
     public int length() {
         int len = 0;
-        for (int i = this.head; i < this.tail; i += this.increment) {
-            len += 1;
-        }
         return len;
+    }
+
+    @Override
+    public CDT siContains(CDT other) {
+        if (other instanceof CInteger || other instanceof CFloat) {
+            return new CBoolean(other.siGreaterThanOrEqual(this.head).toBool() && other.siLessThan(this.tail).toBool());
+        }
+        return super.siContains(other);
     }
 
     @Override
@@ -54,11 +56,11 @@ public class CRange extends CDT{
     @Override
     public String toString() {
         String s = "";
-        s += Integer.toString(this.head);
+        s += this.head.toString();
         s += "..";
-        s += Integer.toString(this.tail);
+        s += this.tail.toString();
         s += " by ";
-        s += Integer.toString(this.increment);
+        s += this.increment.toString();
         return s;
     }
 

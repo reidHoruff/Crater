@@ -88,11 +88,13 @@ public class CClass extends CDT {
 
     @Override
     public CDT siAccessMember(String identifier, CraterVariableScope accessor) {
+        /*
         if (accessor.isOrIsDescendentOf(this.staticScope)) {
             System.out.println("PUBLIC ACCESS");
         } else {
             System.out.println("PRIVATE ACCESS");
         }
+        */
 
         if (this.staticScope.recursiveHasVariable(identifier)) {
             return this.staticScope.getVariableReference(identifier);

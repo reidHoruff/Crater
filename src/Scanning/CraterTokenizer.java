@@ -98,7 +98,7 @@ public class CraterTokenizer {
         add("\\}", TokenType.C_RCURLEY);
         add("\\<", TokenType.C_LESSTHAN);
         add("\\>", TokenType.C_GREATERTHAN);
-        add("[1-9][0-9]*\\.[0-9]+", TokenType.R_FLOAT);
+        add("(([1-9][0-9]*)|0)\\.[0-9]+", TokenType.R_FLOAT);
         add("-?[0-9]+", TokenType.R_INT);
         add("[a-zA-Z_][a-zA-Z0-9_]*", TokenType.R_IDENT);
         add("\\@[a-zA-Z][a-zA-Z0-9_]*", TokenType.R_ATOM);

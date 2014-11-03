@@ -41,6 +41,6 @@ public class CRangeETNode extends ETNode {
 
         }
 
-        return new CRange(head.toInt(), tail.toInt(), increment.toInt());
+        return new CRange(head, tail, increment);
     }
 }

@@ -30,12 +30,11 @@ public class ForLoopETNode extends ETNode {
 
         if (expression instanceof CRange) {
             CRange range = expression.toCRange();
-            CInteger value = new CInteger(0);
+            CDT value = range.head;
             MetaCDT wrapper = value.withMetaWrapper();
             scope.nonRecursiveSetValueWithWrapper(this.variableIdent, wrapper);
-            for (int i = range.head; i < range.tail; i += range.increment) {
+            while (true) {
                 if (this.isExecutionBroken) break;
-                value.setIntValue(i);
                 wrapper.setData(value);
                 lastValue = this.body.executeMetaSafe(scope);
             }

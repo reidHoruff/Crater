@@ -231,9 +231,11 @@ public class CList extends AbstractCIndexable {
 
     public CList rangeListAccess(CRange range) {
         CList newList = new CList();
+        /*
         for (int x = range.head; x < range.tail; x += range.increment) {
             newList.addCDT(this.getElementMetaSafe(x).clone());
         }
+        */
         return newList;
     }
 

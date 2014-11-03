@@ -45,9 +45,11 @@ public class MapBuiltinFunction extends CFunction {
     private CDT mapToRange(CFunction lambda, CRange range) {
         CList list = new CList();
 
+        /*
         for (int i = range.head; i < range.tail; i += range.increment) {
             list.addCDT(lambda.callWithSingleArgument(new CInteger(i)));
         }
+        */
 
         return list;
     }

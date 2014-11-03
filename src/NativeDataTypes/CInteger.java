@@ -9,7 +9,8 @@ import java.util.ArrayList;
  * Created by reidhoruff on 10/8/14.
  */
 public class CInteger extends CDT {
-    public int intValue;
+
+    public int value;
 
     public CInteger(int value) {
         super();
@@ -17,7 +18,7 @@ public class CInteger extends CDT {
     }
 
     public void setIntValue(int value) {
-        this.intValue = value;
+        this.value = value;
     }
 
     /*
@@ -27,7 +28,7 @@ public class CInteger extends CDT {
     @Override
     public CDT siMutuallyEqualTo(CDT other) {
         if (other instanceof CInteger) {
-            return new CBoolean(this.intValue == other.toInt());
+            return new CBoolean(this.value == other.toInt());
         }
         return super.siMutuallyEqualTo(other);
     }
@@ -35,7 +36,7 @@ public class CInteger extends CDT {
     @Override
     public CDT siMultiply(CDT other) {
         if (other instanceof CInteger) {
-            return new CInteger(this.intValue * other.toInt());
+            return new CInteger(this.value * other.toInt());
         }
         return super.siMultiply(other);
     }
@@ -43,7 +44,10 @@ public class CInteger extends CDT {
     @Override
     public CDT siCompareTo(CDT other) {
         if (other instanceof CInteger) {
-            return new CInteger(this.intValue - other.toInt());
+            return new CInteger(this.value - other.toInt());
+        }
+        if (other instanceof CFloat) {
+            return new CInteger((int)(this.value - other.toFloat()));
         }
         return super.siCompareTo(other);
     }
@@ -51,30 +55,62 @@ public class CInteger extends CDT {
     @Override
     public CDT siLessThan(CDT other) {
         if (other instanceof CInteger) {
-            return new CBoolean(this.intValue < other.toInt());
+            return new CBoolean(this.value < other.toInt());
         }
-
         if (other instanceof InfCDT) {
             return new CBoolean(true);
         }
-
         if (other instanceof NinfCDT) {
             return new CBoolean(false);
         }
-
         return super.siLessThan(other);
     }
 
     @Override
     public CDT siGreaterThan(CDT other) {
         if (other instanceof CInteger) {
-            return new CBoolean(this.intValue > other.toInt());
+            return new CBoolean(this.value > other.toInt());
         }
-
+        if (other instanceof CFloat) {
+            return new CBoolean(this.value > other.toFloat());
+        }
         if (other instanceof InfCDT) {
             return new CBoolean(false);
         }
+        if (other instanceof NinfCDT) {
+            return new CBoolean(true);
+        }
+        return super.siLessThan(other);
+    }
 
+    @Override
+    public CDT siLessThanOrEqual(CDT other) {
+        if (other instanceof CInteger) {
+            return new CBoolean(this.value <= other.toInt());
+        }
+        if (other instanceof CFloat) {
+            return new CBoolean(this.value <= other.toFloat());
+        }
+        if (other instanceof InfCDT) {
+            return new CBoolean(true);
+        }
+        if (other instanceof NinfCDT) {
+            return new CBoolean(false);
+        }
+        return super.siLessThan(other);
+    }
+
+    @Override
+    public CDT siGreaterThanOrEqual(CDT other) {
+        if (other instanceof CInteger) {
+            return new CBoolean(this.value >= other.toInt());
+        }
+        if (other instanceof CFloat) {
+            return new CBoolean(this.value >= other.toFloat());
+        }
+        if (other instanceof InfCDT) {
+            return new CBoolean(false);
+        }
         if (other instanceof NinfCDT) {
             return new CBoolean(true);
         }
@@ -88,7 +124,7 @@ public class CInteger extends CDT {
                 @Override
                 public CDT callWithArguments(ArrayList<CDT> values) {
                     for (CDT value : values) {
-                        int v = ((CInteger)this.host).intValue;
+                        int v = ((CInteger)this.host).value;
                         for (int i = 0; i < v; i++) {
                             value.callWithSingleArgument(new CInteger(i));
                         }
@@ -121,17 +157,17 @@ public class CInteger extends CDT {
     }
 
     public void increment() {
-        this.intValue += 1;
+        this.value += 1;
     }
 
     public void deincrement() {
-        this.intValue -= 1;
+        this.value -= 1;
     }
 
     @Override
     public CDT siSubtract(CDT other) {
         if (other instanceof CInteger) {
-            return new CInteger(this.intValue - other.toInt());
+            return new CInteger(this.value - other.toInt());
         }
         return super.siSubtract(other);
     }
@@ -139,7 +175,7 @@ public class CInteger extends CDT {
     @Override
     public CDT siDivide(CDT other) {
         if (other instanceof CInteger) {
-            return new CInteger(this.intValue / other.toInt());
+            return new CInteger(this.value / other.toInt());
         }
         return super.siDivide(other);
     }
@@ -147,7 +183,10 @@ public class CInteger extends CDT {
     @Override
     public CDT siPlus(CDT other) {
         if (other instanceof CInteger) {
-            return new CInteger(this.intValue + other.toInt());
+            return new CInteger(this.value + other.toInt());
+        }
+        if (other instanceof CFloat) {
+            return new CFloat(this.value + other.toFloat());
         }
         return super.siPlus(other);
     }
@@ -155,7 +194,7 @@ public class CInteger extends CDT {
     @Override
     public CDT siPlusEquals(CDT other) {
         if (other instanceof CInteger) {
-            this.intValue += other.toInt();
+            this.value += other.toInt();
             return this;
         }
         return super.siPlusEquals(other);
@@ -164,7 +203,7 @@ public class CInteger extends CDT {
     @Override
     public CDT siMod(CDT other) {
         if (other instanceof CInteger) {
-            return new CInteger(this.intValue % other.toInt());
+            return new CInteger(this.value % other.toInt());
         }
         return super.siMod(other);
     }
@@ -172,7 +211,7 @@ public class CInteger extends CDT {
     @Override
     public CDT siNotEqual(CDT other) {
         if (other instanceof CInteger) {
-            return new CBoolean(this.intValue != other.toInt());
+            return new CBoolean(this.value != other.toInt());
         }
         return super.siNotEqual(other);
     }
@@ -183,7 +222,7 @@ public class CInteger extends CDT {
 
     @Override
     public String toString() {
-        return Integer.toString(this.intValue);
+        return Integer.toString(this.value);
     }
 
     @Override
@@ -193,13 +232,13 @@ public class CInteger extends CDT {
 
     @Override
     public int hashCode() {
-        return this.intValue;
+        return this.value;
     }
 
     @Override
     public CDT siContains(CDT other) {
         if (other instanceof CInteger) {
-            return new CBoolean(this.intValue % ((CInteger) other).intValue == 0);
+            return new CBoolean(this.value % ((CInteger) other).value == 0);
         }
 
         return super.siContains(other);

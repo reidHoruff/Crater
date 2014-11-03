@@ -31,6 +31,12 @@ public class StatementListETNode extends ETNode {
         super.handleBreak();
     }
 
+    @Override
+    protected void handleReturn() {
+        this.isExecutionBroken = true;
+        super.handleReturn();
+    }
+
     public CDT execute(CraterVariableScope scope) {
         CDT lastValue = null;
         this.isExecutionBroken = false;

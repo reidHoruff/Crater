@@ -47,12 +47,20 @@ public abstract class CDT implements Comparable<CDT> {
         return (CInteger)this;
     }
 
+    public CFloat toCFloat() {
+        return (CFloat)this;
+    }
+
+    public double toFloat() {
+        return ((CFloat)this).value;
+    }
+
     public CDict toCDict() {
         return (CDict)this;
     }
 
     public int toInt() {
-        return toCInteger().intValue;
+        return toCInteger().value;
     }
 
     public CList toCList() {

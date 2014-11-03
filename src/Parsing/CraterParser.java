@@ -7,6 +7,7 @@ import Exceptions.CraterInternalException;
 import Exceptions.CraterParserException;
 import ExecutionTree.*;
 import NativeDataTypes.CAtom;
+import NativeDataTypes.FloatLiteralETNode;
 import NativeDataTypes.InfCDT;
 import NativeDataTypes.NinfCDT;
 import Scanning.CraterTokenizer;
@@ -408,6 +409,14 @@ public class CraterParser {
         }
 
         /**
+         * Float literal
+         */
+        else if (acceptThenKeep(TokenType.R_FLOAT)) {
+            value = new FloatLiteralETNode(popKeptToken());
+            value.setSpawningToken(peekMarkedToken());
+        }
+
+        /**
          * atom
          */
         else if (acceptThenKeep(TokenType.R_ATOM)) {
@@ -724,10 +733,10 @@ public class CraterParser {
     private ETNode rangeOperatorTail(ETNode headExpression) {
         pushTokenStreamMarker();
         if (accept(TokenType.D_TWO_DOTS)) {
-            ETNode tail = some(expression());
+            ETNode tail = some(expressionHead());
 
             if (accept(TokenType.KW_BY)) {
-                ETNode increment = some(expression());
+                ETNode increment = some(expressionHead());
                 popTokenStreamMarker();
                 return new CRangeETNode(headExpression, tail, increment);
             } else {
