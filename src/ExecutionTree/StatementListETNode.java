@@ -48,6 +48,8 @@ public class StatementListETNode extends ETNode {
             }
         }
 
+        scope.clear();
+
         if (lastValue != null) {
             return lastValue;
         } else {

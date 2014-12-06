@@ -158,6 +158,10 @@ public class CraterVariableScope {
         return false;
     }
 
+    public void clear() {
+       this.variables.clear();
+    }
+
     public MetaCDT getVariableReference(String identifier) {
 
         MetaCDT result = this.recursivelyFind(identifier);

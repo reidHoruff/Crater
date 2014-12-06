@@ -30,10 +30,10 @@ public class ForLoopETNode extends ETNode {
         if (expression instanceof CRange) {
             CRange range = expression.toCRange();
             CDT value = range.head.clone();
-            scope.nonRecursiveSetValue(this.variableIdent, value);
             while (true) {
                 if (this.isExecutionBroken) break;
                 if (!range.siContains(value).toBool()) break;
+                scope.nonRecursiveSetValue(this.variableIdent, value);
                 lastValue = this.body.executeMetaSafe(scope);
                 value = value.siPlus(range.increment);
                 scope.nonRecursiveSetValue(this.variableIdent, value);

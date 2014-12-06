@@ -25,9 +25,6 @@ rain.new().say_hi().put();
 
 (0..100 contains 1).put();
 
-var sum = 0;
-1000.each(|x| -> sum += x)
-sum.put();
 
 (1..100 contains 100).put();
 var foo = [1,2,3,4,3,6];
@@ -64,6 +61,16 @@ lst.map(|x| -> x*x).put();
 fun genFun || -> {
 	ret || -> none
 }
-var foo = genFun()
-(1+2).put()
+
+for x in 0...1 {
+    for y in 0...1 {
+        for z in 0...1 {
+            var sum = x+y+x
+            if sum % 2 == 0 {
+                sum.put()
+            }
+        }
+    }
+}
+
 
