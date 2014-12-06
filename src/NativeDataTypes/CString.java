@@ -27,7 +27,7 @@ public class CString extends CDT {
     @Override
     public CDT siMutuallyEqualTo(CDT other) {
         if (other instanceof CString) {
-            return new CBoolean((this.value.equals(other.toString())));
+            return new CBoolean((this.value.equals(other.toCString().value)));
         }
         return super.siMutuallyEqualTo(other);
     }
@@ -75,7 +75,7 @@ public class CString extends CDT {
 
     @Override
     public String toString() {
-        return this.value;
+        return "\"" + this.value + "\"";
     }
 
     public int length() {

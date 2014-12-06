@@ -39,6 +39,9 @@ public class CFloat extends CDT {
         if (other instanceof CFloat) {
             return new CBoolean(this.value == other.toFloat());
         }
+        if (other instanceof CInteger) {
+            return new CBoolean(this.value == other.toInt());
+        }
         return super.siMutuallyEqualTo(other);
     }
 
@@ -46,6 +49,9 @@ public class CFloat extends CDT {
     public CDT siMultiply(CDT other) {
         if (other instanceof CFloat) {
             return new CFloat(this.value * other.toFloat());
+        }
+        if (other instanceof CInteger) {
+            return new CFloat(this.value * other.toInt());
         }
         return super.siMultiply(other);
     }
@@ -147,5 +153,15 @@ public class CFloat extends CDT {
             return this.value == ((CFloat)obj).value;
         }
         return false;
+    }
+
+    @Override
+    public boolean isNumber() {
+        return true;
+    }
+
+    @Override
+    public CDT clone() {
+        return new CFloat(this.value);
     }
 }

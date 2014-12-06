@@ -41,6 +41,7 @@ public class SimpleOperationETNode extends ETNode {
             case C_GREATERTHAN: return l.siGreaterThan(r);
             case D_DOUBLE_EQUALS: return l.siMutuallyEqualTo(r);
             case KW_CONTAINS: return l.siContains(r);
+            case KW_IN: return l.siIn(r);
             case C_MOD: return l.siMod(r);
             case KW_IS: return l.siIs(r);
             case D_NOT_EQUAL: return l.siNotEqual(r);

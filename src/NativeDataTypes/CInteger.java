@@ -30,6 +30,9 @@ public class CInteger extends CDT {
         if (other instanceof CInteger) {
             return new CBoolean(this.value == other.toInt());
         }
+        if (other instanceof CFloat) {
+            return new CBoolean(this.value == other.toFloat());
+        }
         return super.siMutuallyEqualTo(other);
     }
 
@@ -37,6 +40,8 @@ public class CInteger extends CDT {
     public CDT siMultiply(CDT other) {
         if (other instanceof CInteger) {
             return new CInteger(this.value * other.toInt());
+        } else if (other instanceof CFloat) {
+            return new CFloat(this.value * other.toFloat());
         }
         return super.siMultiply(other);
     }
@@ -56,6 +61,9 @@ public class CInteger extends CDT {
     public CDT siLessThan(CDT other) {
         if (other instanceof CInteger) {
             return new CBoolean(this.value < other.toInt());
+        }
+        if (other instanceof CFloat) {
+            return new CBoolean(this.value < other.toFloat());
         }
         if (other instanceof InfCDT) {
             return new CBoolean(true);
@@ -134,25 +142,6 @@ public class CInteger extends CDT {
             };
         }
 
-        if (identifier.equals("_inc")) {
-            return new CBuiltinMemberFunction(this) {
-                @Override
-                public CDT callWithArguments(ArrayList<CDT> values) {
-                    ((CInteger)this.host).increment();
-                    return this.host;
-                }
-            };
-        }
-
-        if (identifier.equals("dec")) {
-            return new CBuiltinMemberFunction(this) {
-                @Override
-                public CDT callWithArguments(ArrayList<CDT> values) {
-                    ((CInteger)this.host).deincrement();
-                    return this.host;
-                }
-            };
-        }
         return super.siAccessMember(identifier, accessor);
     }
 
@@ -169,6 +158,9 @@ public class CInteger extends CDT {
         if (other instanceof CInteger) {
             return new CInteger(this.value - other.toInt());
         }
+        if (other instanceof CFloat) {
+            return new CFloat(this.value - other.toFloat());
+        }
         return super.siSubtract(other);
     }
 
@@ -176,6 +168,9 @@ public class CInteger extends CDT {
     public CDT siDivide(CDT other) {
         if (other instanceof CInteger) {
             return new CInteger(this.value / other.toInt());
+        }
+        if (other instanceof CFloat) {
+            return new CFloat(this.value / other.toFloat());
         }
         return super.siDivide(other);
     }
@@ -197,6 +192,9 @@ public class CInteger extends CDT {
             this.value += other.toInt();
             return this;
         }
+        if (other instanceof CFloat) {
+            return new CFloat(this.value + other.toFloat());
+        }
         return super.siPlusEquals(other);
     }
 
@@ -212,6 +210,9 @@ public class CInteger extends CDT {
     public CDT siNotEqual(CDT other) {
         if (other instanceof CInteger) {
             return new CBoolean(this.value != other.toInt());
+        }
+        if (other instanceof CFloat) {
+            return new CBoolean(this.value != other.toFloat());
         }
         return super.siNotEqual(other);
     }
@@ -260,10 +261,13 @@ public class CInteger extends CDT {
         return false;
     }
 
-    /**
     @Override
-    public CDT siIs(CDT other) {
-        return this.siMutuallyEqualTo(other);
+    public CDT clone() {
+        return new CInteger(this.value);
     }
-    */
+
+    @Override
+    public boolean isNumber() {
+        return true;
+    }
 }

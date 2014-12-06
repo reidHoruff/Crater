@@ -51,6 +51,10 @@ public abstract class CDT implements Comparable<CDT> {
         return (CFloat)this;
     }
 
+    public CString toCString() {
+        return (CString)this;
+    }
+
     public double toFloat() {
         return ((CFloat)this).value;
     }
@@ -172,6 +176,10 @@ public abstract class CDT implements Comparable<CDT> {
         throw new CraterExecutionException(this.getTypeName() + " cannot be indexed by type " + index.getTypeName());
     }
 
+    public CDT siIn(CDT other) {
+        throw new CraterInvalidSimpleOperationException("in", this, other);
+    }
+
     public CDT siInstantiate(ArrayList<CDT> arguments) {
         throw new CraterExecutionException("[" + this.getTypeName() + "] cannot be instantiated");
     }
@@ -237,4 +245,10 @@ public abstract class CDT implements Comparable<CDT> {
         }
         return super.equals(obj);
     }
+
+    /**
+     * type checking
+     */
+
+    public boolean isNumber() { return false; }
 }

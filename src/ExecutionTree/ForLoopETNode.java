@@ -4,7 +4,6 @@ import CraterExecutionEnvironment.CraterVariableScope;
 import Exceptions.CraterExecutionException;
 import NativeDataTypes.*;
 import Scanning.Token;
-import sun.util.resources.cldr.as.CalendarData_as_IN;
 
 /**
  * Created by reidhoruff on 10/15/14.
@@ -30,13 +29,14 @@ public class ForLoopETNode extends ETNode {
 
         if (expression instanceof CRange) {
             CRange range = expression.toCRange();
-            CDT value = range.head;
-            MetaCDT wrapper = value.withMetaWrapper();
-            scope.nonRecursiveSetValueWithWrapper(this.variableIdent, wrapper);
+            CDT value = range.head.clone();
+            scope.nonRecursiveSetValue(this.variableIdent, value);
             while (true) {
                 if (this.isExecutionBroken) break;
-                wrapper.setData(value);
+                if (!range.siContains(value).toBool()) break;
                 lastValue = this.body.executeMetaSafe(scope);
+                value = value.siPlus(range.increment);
+                scope.nonRecursiveSetValue(this.variableIdent, value);
             }
         } else if (expression instanceof CDict) {
             CDict dict = expression.toCDict();

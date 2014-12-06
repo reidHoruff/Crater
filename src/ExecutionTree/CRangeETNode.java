@@ -1,6 +1,7 @@
 package ExecutionTree;
 
 import CraterExecutionEnvironment.CraterVariableScope;
+import Exceptions.CraterExecutionException;
 import NativeDataTypes.CDT;
 import NativeDataTypes.CInteger;
 import NativeDataTypes.CRange;
@@ -11,15 +12,17 @@ import NativeDataTypes.CRange;
 public class CRangeETNode extends ETNode {
 
     public ETNode head, tail, increment;
+    private boolean include;
 
-    public CRangeETNode(ETNode head, ETNode tail, ETNode increment) {
+    public CRangeETNode(ETNode head, ETNode tail, boolean include, ETNode increment) {
         this.head = head.setParent(this);
         this.tail = tail.setParent(this);
+        this.include = include;
         this.increment = increment.setParent(this);
     }
 
-    public CRangeETNode(ETNode head, ETNode tail) {
-        this(head, tail, new IntegerLiteralETNode(1));
+    public CRangeETNode(ETNode head, ETNode tail, boolean include) {
+        this(head, tail, include, new IntegerLiteralETNode(1));
     }
 
     @Override
@@ -28,19 +31,10 @@ public class CRangeETNode extends ETNode {
         CDT tail = this.tail.executeMetaSafe(scope);
         CDT increment = this.increment.executeMetaSafe(scope);
 
-
-        if (!(head instanceof CInteger)) {
-
+        if (!head.isNumber() || !tail.isNumber() || !increment.isNumber()) {
+            throw new CraterExecutionException("range can only contain integers and floats");
         }
 
-        if (!(tail instanceof CInteger)) {
-
-        }
-
-        if (!(increment instanceof CInteger)) {
-
-        }
-
-        return new CRange(head, tail, increment);
+        return new CRange(head, tail, increment, this.include);
     }
 }

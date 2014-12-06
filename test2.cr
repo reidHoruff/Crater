@@ -11,10 +11,8 @@ class rain {
     fun say_hi || ->  {
         if this is not static {
             "saying hi from static".put()
-            ret 4
         } else {
             "saying hi from object".put()
-            ret 3..4 by 1..1
         }
     }
 }
@@ -29,4 +27,43 @@ rain.new().say_hi().put();
 
 var sum = 0;
 1000.each(|x| -> sum += x)
-sum.put()
+sum.put();
+
+(1..100 contains 100).put();
+var foo = [1,2,3,4,3,6];
+foo.sort();
+
+var dict = {"a": 123, true: "cat"}
+for key in dict key.put()
+
+dict[true].put()
+var x = 3
+    while x > 0 {
+        x.put()
+        x = x - 1
+        if x == 1 break
+    }
+
+var d =  {"a": "cat", "b": "dog"}
+for key in d {
+    key.put()
+    d[key].put()
+}
+
+fun count |x| -> {
+    if x > 0 {
+        x.put()
+        count(x - 1)
+        var count = "count";
+    }
+}
+
+var lst = [1,2,3,4,5]
+lst.map(|x| -> x*x).put();
+
+fun genFun || -> {
+	ret || -> none
+}
+var foo = genFun()
+(1+2).put()
+

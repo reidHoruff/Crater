@@ -732,16 +732,18 @@ public class CraterParser {
      */
     private ETNode rangeOperatorTail(ETNode headExpression) {
         pushTokenStreamMarker();
-        if (accept(TokenType.D_TWO_DOTS)) {
+        if (acceptThenKeep(TokenType.D_TWO_DOTS, TokenType.D_THREE_DOTS)) {
+            boolean include = popKeptToken().token == TokenType.D_THREE_DOTS;
+
             ETNode tail = some(expressionHead());
 
             if (accept(TokenType.KW_BY)) {
                 ETNode increment = some(expressionHead());
                 popTokenStreamMarker();
-                return new CRangeETNode(headExpression, tail, increment);
+                return new CRangeETNode(headExpression, tail, include, increment);
             } else {
                 popTokenStreamMarker();
-                return new CRangeETNode(headExpression, tail);
+                return new CRangeETNode(headExpression, tail, include);
             }
         } else {
             popTokenStreamMarkerAndRestore();
@@ -1089,6 +1091,7 @@ public class CraterParser {
                 TokenType.KW_CONTAINS,
                 TokenType.C_MOD,
                 TokenType.KW_IS,
+                TokenType.KW_IN,
                 TokenType.D_NOT_EQUAL
         );
     }

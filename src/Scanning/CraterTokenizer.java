@@ -46,7 +46,6 @@ public class CraterTokenizer {
         add("static", TokenType.KW_STATIC);
         add("private", TokenType.KW_PRIVATE);
         add("new", TokenType.KW_NEW);
-        add("init", TokenType.KW_INIT);
         add("bool", TokenType.KW_BOOL);
         add("list", TokenType.KW_LIST);
         add("true", TokenType.KW_TRUE);
@@ -71,6 +70,8 @@ public class CraterTokenizer {
         add("or", TokenType.KW_OR);
         add("xor", TokenType.KW_XOR);
         add("\"[a-zA-Z_ 0-9\\.]*\"", TokenType.R_STRING_LITERAL);
+        add("(([1-9][0-9]*)|0)\\.[0-9]+", TokenType.R_FLOAT);
+        add("-?[0-9]+", TokenType.R_INT);
         add("\\.\\.\\.", TokenType.D_THREE_DOTS);
         add("\\.\\.", TokenType.D_TWO_DOTS);
         add("\\.", TokenType.C_PERIOD);
@@ -98,8 +99,6 @@ public class CraterTokenizer {
         add("\\}", TokenType.C_RCURLEY);
         add("\\<", TokenType.C_LESSTHAN);
         add("\\>", TokenType.C_GREATERTHAN);
-        add("(([1-9][0-9]*)|0)\\.[0-9]+", TokenType.R_FLOAT);
-        add("-?[0-9]+", TokenType.R_INT);
         add("[a-zA-Z_][a-zA-Z0-9_]*", TokenType.R_IDENT);
         add("\\@[a-zA-Z][a-zA-Z0-9_]*", TokenType.R_ATOM);
     }
