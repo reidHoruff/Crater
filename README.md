@@ -7,3 +7,5 @@ This repo contains a IntelliJ project folder. If you want to play with the langu
 
 Builtin functions are currently disabled so put(x) won't work, use x.put().
 
+test.cr may contain outdated syntax.
+
