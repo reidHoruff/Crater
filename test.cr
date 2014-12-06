@@ -72,7 +72,7 @@ put(rng)
 
 put((1,2) + (2,3))
 put([1,2,3] + [4,5,6][5])
-put((|x| -> @fuckyou)(5))
+put((|x| -> @hello)(5))
 
 fun haha || -> {
     put(1 + 1 + none)
