@@ -54,7 +54,12 @@ public class CDict extends AbstractCIndexable {
             if (builder.length() > 1) {
                 builder.append(", ");
             }
-            builder.append(key.toString());
+
+            if (key instanceof CString) {
+                builder.append(((CString) key).toStringWithQuotes());
+            } else {
+                builder.append(key.toString());
+            }
             builder.append(": ");
             builder.append(this.dictionary.get(key).toString());
         }

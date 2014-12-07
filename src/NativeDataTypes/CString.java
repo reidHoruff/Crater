@@ -75,7 +75,11 @@ public class CString extends CDT {
 
     @Override
     public String toString() {
-        return "\"" + this.value + "\"";
+        return this.value;
+    }
+
+    public String toStringWithQuotes() {
+        return "\"" + this.toString() + "\"";
     }
 
     public int length() {

@@ -19,14 +19,9 @@ public class CraterTokenizer {
     private Tokenizer tokenizer = null;
     private ArrayList<String> lines;
 
-    public CraterTokenizer(File input) {
+    public CraterTokenizer(File input) throws FileNotFoundException {
         this.tokenizer = new Tokenizer();
-        Scanner in = null;
-        try {
-            in = new Scanner(new FileReader(input));
-        } catch (FileNotFoundException e) {
-            System.err.println("source file not found");
-        }
+        Scanner in = new Scanner(new FileReader(input));
 
         lines = new ArrayList<String>();
 

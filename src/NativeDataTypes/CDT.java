@@ -215,7 +215,7 @@ public abstract class CDT implements Comparable<CDT> {
             return new CBuiltinMemberFunction(this) {
                 @Override
                 public CDT callWithArguments(ArrayList<CDT> values) {
-                    System.out.println("::" + this.host.toString());
+                    System.out.println(this.host.toString());
                     return CNone.get();
                 }
             };

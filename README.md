@@ -9,3 +9,8 @@ Builtin functions are currently disabled so put(x) won't work, use x.put().
 
 test.cr may contain outdated syntax.
 
+
+##Running precompiled jar in out/artifacts/Crater_jar/Crater.jar
+
+java -jar Crater.jar sourceFile.cr
+
