@@ -10,14 +10,14 @@ import java.util.ArrayList;
  */
 public class CInteger extends CDT {
 
-    public int value;
+    public long value;
 
-    public CInteger(int value) {
+    public CInteger(long value) {
         super();
         this.setIntValue(value);
     }
 
-    public void setIntValue(int value) {
+    public void setIntValue(long value) {
         this.value = value;
     }
 
@@ -132,7 +132,7 @@ public class CInteger extends CDT {
                 @Override
                 public CDT callWithArguments(ArrayList<CDT> values) {
                     for (CDT value : values) {
-                        int v = ((CInteger)this.host).value;
+                        int v = (int)((CInteger)this.host).value;
                         for (int i = 0; i < v; i++) {
                             value.callWithSingleArgument(new CInteger(i));
                         }
@@ -201,6 +201,7 @@ public class CInteger extends CDT {
     @Override
     public CDT siMod(CDT other) {
         if (other instanceof CInteger) {
+            //todo divide by zero
             return new CInteger(this.value % other.toInt());
         }
         return super.siMod(other);
@@ -223,7 +224,7 @@ public class CInteger extends CDT {
 
     @Override
     public String toString() {
-        return Integer.toString(this.value);
+        return Long.toString(this.value);
     }
 
     @Override
@@ -233,7 +234,7 @@ public class CInteger extends CDT {
 
     @Override
     public int hashCode() {
-        return this.value;
+        return (int)this.value;
     }
 
     @Override

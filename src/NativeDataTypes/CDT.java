@@ -63,7 +63,7 @@ public abstract class CDT implements Comparable<CDT> {
         return (CDict)this;
     }
 
-    public int toInt() {
+    public long toInt() {
         return toCInteger().value;
     }
 
@@ -235,7 +235,7 @@ public abstract class CDT implements Comparable<CDT> {
 
     @Override
     public int compareTo(CDT other) {
-        return this.siCompareTo(other).toInt();
+        return (int)this.siCompareTo(other).toInt();
     }
 
     @Override

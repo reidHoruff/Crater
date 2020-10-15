@@ -10,10 +10,10 @@ import Scanning.Token;
  */
 public class IntegerLiteralETNode extends ETNode {
 
-    public int value;
+    public long value;
 
     public IntegerLiteralETNode(Token token) {
-        this.value = Integer.parseInt(token.sequence);
+        this.value = Long.parseLong(token.sequence);
     }
 
     public IntegerLiteralETNode(int value) {

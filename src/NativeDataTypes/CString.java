@@ -2,6 +2,7 @@ package NativeDataTypes;
 
 import BuiltinFunctions.CBuiltinMemberFunction;
 import CraterExecutionEnvironment.CraterVariableScope;
+import Exceptions.CraterExecutionException;
 import Scanning.Token;
 
 import java.util.ArrayList;
@@ -61,7 +62,7 @@ public class CString extends CDT {
         if (other instanceof CInteger) {
             StringBuilder builder = new StringBuilder();
 
-            int times = other.toInt();
+            long times = other.toInt();
 
             while (times --> 0) {
                 builder.append(this.value);
@@ -102,6 +103,43 @@ public class CString extends CDT {
     @Override
     public int hashCode() {
         return this.value.hashCode();
+    }
+
+    @Override
+    public CDT siIndex(CDT index) {
+        if (index instanceof CInteger) {
+            int idx = (int)index.toInt();
+
+            if (idx < 0 || idx >= this.value.length()) {
+                throw new CraterExecutionException("String index out of bounds.");
+            }
+
+            return new CString(this.value.substring(idx, idx + 1));
+        }
+
+        else if (index instanceof CRange) {
+            ArrayList<MetaCDT> values = index.toCRange().generateList().getItems();
+            String out = ""; // TODO: should be string builder, will be slow
+
+            for (MetaCDT mcidx : values) {
+                CDT cidx = mcidx.metaSafe();
+                if (!(cidx instanceof CInteger)) {
+                    throw new CraterExecutionException("String index range contains non integer value.");
+                }
+
+                int idx = (int)cidx.toInt();
+
+                if (idx < 0 || idx >= this.value.length()) {
+                    throw new CraterExecutionException("String range index out of bounds.");
+                }
+
+                out += this.value.substring(idx, idx + 1);
+            }
+
+            return new CString(out);
+        }
+
+        throw new CraterExecutionException(this.getTypeName() + " cannot be indexed by type " + index.getTypeName());
     }
 
 }

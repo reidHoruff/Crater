@@ -98,7 +98,7 @@ public class CTuple extends AbstractCIndexable {
     @Override
     public CDT siIndex(CDT index) {
         if (index instanceof CInteger) {
-            return this.singleValueListAccess(index.toInt());
+            return this.singleValueListAccess((int)index.toInt());
         }
         return super.siIndex(index);
     }

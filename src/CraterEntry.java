@@ -17,7 +17,7 @@ public class CraterEntry {
         setup is kind of ugly/hacky right now...
          */
         
-        String name = "test2.cr";
+        String name = "euler.cr";
 
         if (args.length >= 1) {
             name = args[0];

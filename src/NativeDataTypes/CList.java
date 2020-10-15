@@ -112,7 +112,7 @@ public class CList extends AbstractCIndexable {
     @Override
     public CDT siIndex(CDT index) {
         if (index instanceof CInteger) {
-            return this.singleValueListAccess(index.toInt());
+            return this.singleValueListAccess((int)index.toInt());
         }
         return super.siIndex(index);
     }
@@ -220,7 +220,7 @@ public class CList extends AbstractCIndexable {
         Collections.sort(this.items, new Comparator<MetaCDT>() {
             @Override
             public int compare(MetaCDT o1, MetaCDT o2) {
-                return o1.metaSafe().siCompareTo(o2.metaSafe()).toInt();
+                return (int)o1.metaSafe().siCompareTo(o2.metaSafe()).toInt();
             }
         });
     }

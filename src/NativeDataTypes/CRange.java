@@ -24,11 +24,16 @@ public class CRange extends CDT{
     public CList generateList() {
         CList list = new CList();
         CDT value = this.head.clone();
-        list.addCDT(value);
+        CDT inc = this.increment;
+
+        if (this.backwards) {
+            inc = inc.siMultiply(new CInteger(-1));
+        }
+
         while (true) {
             if (!this.siContains(value).toBool()) break;
-            value = value.siPlus(this.increment);
             list.addCDT(value);
+            value = value.siPlus(inc);
         }
         return list;
     }
