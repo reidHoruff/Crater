@@ -49,7 +49,7 @@ public class CString extends CDT {
             return new CBuiltinMemberFunction(this) {
                 @Override
                 public CDT callWithArguments(ArrayList<CDT> values) {
-                    return new CInteger(((CString)this.host).length());
+                    return CInteger.gimmie(((CString)this.host).length());
                 }
             };
         }
@@ -122,7 +122,7 @@ public class CString extends CDT {
             CRange range = index.toCRange();
 
             if (range.isLazy()) {
-                range.lazyRealize(new CInteger(this.length() - 1));
+                range.lazyRealize(CInteger.gimmie(this.length() - 1));
             }
 
             ArrayList<MetaCDT> values = range.generateList().getItems();

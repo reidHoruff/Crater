@@ -199,7 +199,7 @@ public abstract class CDT implements Comparable<CDT> {
         }
 
         if (identifier.equals("id")) {
-            return new CInteger(System.identityHashCode(this));
+            return CInteger.gimmie(System.identityHashCode(this));
         }
 
         if (identifier.equals("to_s")) {

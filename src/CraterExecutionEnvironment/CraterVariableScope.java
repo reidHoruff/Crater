@@ -14,8 +14,12 @@ import java.util.HashMap;
 public class CraterVariableScope {
 
     private HashMap<String, MetaCDT> variables;
-    private HashMap<String, MetaCDT> extensions;
+    private HashMap<Integer, MetaCDT> hashVariables;
+
     private CraterVariableScope parentScope;
+
+    private static long scopeIdCounter = 0;
+    private long scopeId;
 
     public CraterVariableScope() {
         this(null);
@@ -49,10 +53,16 @@ public class CraterVariableScope {
         return null;
     }
 
+    public long getScopeId() {
+        return this.scopeId;
+    }
 
     public CraterVariableScope(CraterVariableScope parent) {
         this.variables = new HashMap<String, MetaCDT>();
+        this.hashVariables = new HashMap<Integer, MetaCDT>();
         this.parentScope = parent;
+        this.scopeId = scopeIdCounter;
+        scopeIdCounter += 1;
         this.nonRecursiveSetValue("lvars", new ScopeAwareFunction(this) {
             @Override
             public CDT callWithArguments(ArrayList<CDT> values) {
@@ -83,6 +93,10 @@ public class CraterVariableScope {
 
     public boolean immediatelyContainsVariable(String identifier) {
         return this.variables.containsKey(identifier);
+    }
+
+    public boolean immediatelyContainsVariable(int identifier) {
+        return this.hashVariables.containsKey(identifier);
     }
 
     public boolean recursiveHasVariable(String name) {
@@ -121,21 +135,36 @@ public class CraterVariableScope {
 
     private MetaCDT createVariable(String identifier) {
         MetaCDT wrapper = new MetaCDT();
+        assert false == this.variables.containsKey(identifier);
         this.variables.put(identifier, wrapper);
+        this.hashVariables.put(identifier.hashCode(), wrapper);
         return wrapper;
     }
 
     public void nonRecursiveSetValue(String name, CDT value) {
-        this.variables.put(name, value.withMetaWrapper());
+        this.nonRecursiveSetValueWithWrapper(name, value.withMetaWrapper());
     }
 
     public void nonRecursiveSetValueWithWrapper(String name, MetaCDT value) {
         this.variables.put(name, value);
+        this.hashVariables.put(name.hashCode(), value);
     }
 
     private MetaCDT recursivelyFind(String identifier) {
         if (this.immediatelyContainsVariable(identifier)) {
             return this.variables.get(identifier);
+        }
+
+        if (this.parentScope != null) {
+            return this.parentScope.recursivelyFind(identifier);
+        }
+
+        return null;
+    }
+
+    private MetaCDT recursivelyFind(int identifier) {
+        if (this.immediatelyContainsVariable(identifier)) {
+            return this.hashVariables.get(identifier);
         }
 
         if (this.parentScope != null) {
@@ -163,6 +192,17 @@ public class CraterVariableScope {
     }
 
     public MetaCDT getVariableReference(String identifier) {
+
+        MetaCDT result = this.recursivelyFind(identifier);
+
+        if (result == null) {
+            throw new CraterExecutionException("variable [" + identifier + "] must first be defined with the var keyword");
+        }
+
+        return result;
+    }
+
+    public MetaCDT getVariableReference(int identifier) {
 
         MetaCDT result = this.recursivelyFind(identifier);
 

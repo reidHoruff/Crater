@@ -22,7 +22,7 @@ public class CTuple extends AbstractCIndexable {
     }
 
     public CDT length() {
-        return new CInteger(this.items.size());
+        return CInteger.gimmie(this.items.size());
     }
 
     @Override

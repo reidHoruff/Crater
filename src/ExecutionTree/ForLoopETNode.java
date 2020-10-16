@@ -13,6 +13,7 @@ public class ForLoopETNode extends ETNode {
     private String variableIdent;
     private ETNode feederExpression, body;
     private boolean isExecutionBroken;
+    private CraterVariableScope scope, oldParentScope;
 
     public ForLoopETNode(Token ident, ETNode feederExpression, ETNode body) {
         this.variableIdent = ident.sequence;
@@ -21,22 +22,33 @@ public class ForLoopETNode extends ETNode {
     }
 
     @Override
-    public CDT execute(CraterVariableScope scope) {
-        scope = scope.extend();
+    public CDT execute(CraterVariableScope parentScope) {
+
+        if (scope == null || (parentScope != oldParentScope)) {
+            scope = parentScope.extend();
+            // we only track parent scope instance in case a parent
+            // scope executor swapped out their CraterVariableScope under from
+            // us rather than clearing like us good bois.
+            oldParentScope = parentScope;
+        }
+        else {
+            scope.clear();
+        }
+
         this.isExecutionBroken = false;
         CDT expression = this.feederExpression.executeMetaSafe(scope);
         CDT lastValue = CNone.get();
 
         if (expression instanceof CRange) {
+            // this could be simpler but is OPTIMIZED!
             CRange range = expression.toCRange();
             CDT value = range.head.clone();
-            while (true) {
-                if (this.isExecutionBroken) break;
-                if (!range.siContains(value).toBool()) break;
-                scope.nonRecursiveSetValue(this.variableIdent, value);
+            MetaCDT wrapped = value.withMetaWrapper();
+            scope.nonRecursiveSetValueWithWrapper(this.variableIdent, wrapped);
+            while (!this.isExecutionBroken && range.siContains(value).toBool()) {
+                wrapped.setData(value);
                 lastValue = this.body.executeMetaSafe(scope);
                 value = value.siPlus(range.increment);
-                scope.nonRecursiveSetValue(this.variableIdent, value);
             }
         } else if (expression instanceof CDict) {
             CDict dict = expression.toCDict();

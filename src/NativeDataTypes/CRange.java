@@ -54,7 +54,7 @@ public class CRange extends CDT{
         CDT inc = this.increment;
 
         if (this.backwards) {
-            inc = inc.siMultiply(new CInteger(-1));
+            inc = inc.siMultiply(CInteger.gimmie(-1));
         }
 
         while (true) {

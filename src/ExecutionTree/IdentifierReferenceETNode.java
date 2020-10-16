@@ -9,14 +9,16 @@ import Scanning.Token;
  */
 public class IdentifierReferenceETNode extends ETNode {
 
-    private Token token;
+    private final Token token;
+    private final int hash;
 
     public IdentifierReferenceETNode(Token token) {
         this.token = token;
+        this.hash = token.sequence.hashCode();
     }
 
     public CDT execute(CraterVariableScope scope) {
-        return scope.getVariableReference(this.token.sequence);
+        return scope.getVariableReference(this.hash);
     }
 
     public void print(int level) {

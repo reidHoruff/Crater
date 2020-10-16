@@ -26,7 +26,7 @@ public class CList extends AbstractCIndexable {
     }
 
     public CDT length() {
-        return new CInteger(this.items.size());
+        return CInteger.gimmie(this.items.size());
     }
 
     public ArrayList<MetaCDT> getItems() {
@@ -101,12 +101,6 @@ public class CList extends AbstractCIndexable {
             return newList;
         }
         return super.siPlus(other);
-    }
-
-    @Override
-    public CDT siPlusEquals(CDT other) {
-        this.addCDT(other);
-        return this;
     }
 
     @Override
@@ -262,4 +256,5 @@ public class CList extends AbstractCIndexable {
     public String getTypeName() {
         return "list";
     }
+
 }

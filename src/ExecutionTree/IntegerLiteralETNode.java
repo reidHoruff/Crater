@@ -21,6 +21,6 @@ public class IntegerLiteralETNode extends ETNode {
     }
 
     public CDT execute(CraterVariableScope scope) {
-        return new CInteger(this.value);
+        return CInteger.gimmie(this.value);
     }
 }

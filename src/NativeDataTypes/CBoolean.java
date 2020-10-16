@@ -52,9 +52,9 @@ public class CBoolean extends CDT {
         if (other instanceof CBoolean) {
             boolean v = other.toBool();
             if (this.value == v) {
-                return new CInteger(0);
+                return CInteger.gimmie(0);
             }
-            return new CInteger(this.value ? -1 : 1);
+            return CInteger.gimmie(this.value ? -1 : 1);
         }
         return super.siCompareTo(other);
     }

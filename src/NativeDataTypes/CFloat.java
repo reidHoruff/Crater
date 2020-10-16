@@ -59,10 +59,10 @@ public class CFloat extends CDT {
     @Override
     public CDT siCompareTo(CDT other) {
         if (other instanceof CInteger) {
-            return new CInteger((int)this.value - other.toInt());
+            return CInteger.gimmie((int)this.value - other.toInt());
         }
         if (other instanceof CFloat) {
-            return new CInteger((int)(this.value - other.toFloat()));
+            return CInteger.gimmie((int)(this.value - other.toFloat()));
         }
         return super.siCompareTo(other);
     }

@@ -10,11 +10,22 @@ import java.util.ArrayList;
  */
 public class CInteger extends CDT {
 
-    //TODO: CInteger (and other literals) should be immutable, private constructor, factory with pool of common values like 1,-1
-
     public final long value;
+    private static final CInteger _n1 = new CInteger(-1);
+    private static final CInteger _0 = new CInteger(0);
+    private static final CInteger _1 = new CInteger(1);
 
-    public CInteger(long value) {
+    public static CInteger gimmie(long val) {
+        // this is how you get fucked up bugs like your integers aren't even right.
+        switch ((int)val) {
+            case -1: return _n1;
+            case 0: return _0;
+            case 1: return _1;
+            default : return new CInteger(val);
+        }
+    }
+
+    private CInteger(long value) {
         super();
         this.value = value;
     }
@@ -37,7 +48,7 @@ public class CInteger extends CDT {
     @Override
     public CDT siMultiply(CDT other) {
         if (other instanceof CInteger) {
-            return new CInteger(this.value * other.toInt());
+            return CInteger.gimmie(this.value * other.toInt());
         } else if (other instanceof CFloat) {
             return new CFloat(this.value * other.toFloat());
         }
@@ -47,10 +58,10 @@ public class CInteger extends CDT {
     @Override
     public CDT siCompareTo(CDT other) {
         if (other instanceof CInteger) {
-            return new CInteger(this.value - other.toInt());
+            return CInteger.gimmie(this.value - other.toInt());
         }
         if (other instanceof CFloat) {
-            return new CInteger((int)(this.value - other.toFloat()));
+            return CInteger.gimmie((int)(this.value - other.toFloat()));
         }
         return super.siCompareTo(other);
     }
@@ -132,7 +143,7 @@ public class CInteger extends CDT {
                     for (CDT value : values) {
                         int v = (int)((CInteger)this.host).value;
                         for (int i = 0; i < v; i++) {
-                            value.callWithSingleArgument(new CInteger(i));
+                            value.callWithSingleArgument(CInteger.gimmie(i));
                         }
                     }
                     return CNone.get();
@@ -146,7 +157,7 @@ public class CInteger extends CDT {
     @Override
     public CDT siSubtract(CDT other) {
         if (other instanceof CInteger) {
-            return new CInteger(this.value - other.toInt());
+            return CInteger.gimmie(this.value - other.toInt());
         }
         if (other instanceof CFloat) {
             return new CFloat(this.value - other.toFloat());
@@ -157,7 +168,7 @@ public class CInteger extends CDT {
     @Override
     public CDT siDivide(CDT other) {
         if (other instanceof CInteger) {
-            return new CInteger(this.value / other.toInt());
+            return CInteger.gimmie(this.value / other.toInt());
         }
         if (other instanceof CFloat) {
             return new CFloat(this.value / other.toFloat());
@@ -168,7 +179,7 @@ public class CInteger extends CDT {
     @Override
     public CDT siPlus(CDT other) {
         if (other instanceof CInteger) {
-            return new CInteger(this.value + other.toInt());
+            return CInteger.gimmie(this.value + other.toInt());
         }
         if (other instanceof CFloat) {
             return new CFloat(this.value + other.toFloat());
@@ -180,7 +191,7 @@ public class CInteger extends CDT {
     public CDT siMod(CDT other) {
         if (other instanceof CInteger) {
             //todo divide by zero
-            return new CInteger(this.value % other.toInt());
+            return CInteger.gimmie(this.value % other.toInt());
         }
         return super.siMod(other);
     }
@@ -242,7 +253,8 @@ public class CInteger extends CDT {
 
     @Override
     public CDT clone() {
-        return new CInteger(this.value);
+        // CIntegers are singletons, this should probalye be removed
+        return this;
     }
 
     @Override
