@@ -118,7 +118,14 @@ public class CString extends CDT {
         }
 
         else if (index instanceof CRange) {
-            ArrayList<MetaCDT> values = index.toCRange().generateList().getItems();
+
+            CRange range = index.toCRange();
+
+            if (range.isLazy()) {
+                range.lazyRealize(new CInteger(this.length() - 1));
+            }
+
+            ArrayList<MetaCDT> values = range.generateList().getItems();
             String out = ""; // TODO: should be string builder, will be slow
 
             for (MetaCDT mcidx : values) {

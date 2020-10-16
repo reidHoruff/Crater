@@ -6,10 +6,7 @@ import CraterHelpers.clog;
 import Exceptions.CraterInternalException;
 import Exceptions.CraterParserException;
 import ExecutionTree.*;
-import NativeDataTypes.CAtom;
-import NativeDataTypes.FloatLiteralETNode;
-import NativeDataTypes.InfCDT;
-import NativeDataTypes.NinfCDT;
+import NativeDataTypes.*;
 import Scanning.CraterTokenizer;
 
 import java.util.ArrayList;
@@ -437,6 +434,14 @@ public class CraterParser {
          */
         else if (accept(TokenType.KW_NINF)) {
             value = new CDTLiteralETNode(new NinfCDT());
+            value.setSpawningToken(peekMarkedToken());
+        }
+
+        /**
+         * end
+         */
+        else if (accept(TokenType.KW_END)) {
+            value = new CDTLiteralETNode(new EndCDT());
             value.setSpawningToken(peekMarkedToken());
         }
 

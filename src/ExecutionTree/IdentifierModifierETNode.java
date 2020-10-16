@@ -29,7 +29,7 @@ public class IdentifierModifierETNode extends ETNode {
         CDT right = rightSide.executeMetaSafe(scope);
 
         switch (this.modifierToken) {
-            case D_PLUS_EQUALS: left.metaSafe().siPlusEquals(right); break;
+            case D_PLUS_EQUALS: left.setData(left.metaSafe().siPlus(right)); break;
             case C_EQUALS: left.setData(right); break;
             default: throw new CraterParserException("Invalid operation");
         }

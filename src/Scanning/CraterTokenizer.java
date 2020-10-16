@@ -61,6 +61,7 @@ public class CraterTokenizer {
         add("fun", TokenType.KW_FUN);
         add("false", TokenType.KW_FALSE);
         add("and", TokenType.KW_AND);
+        add("end", TokenType.KW_END);
         add("contains", TokenType.KW_CONTAINS);
         add("or", TokenType.KW_OR);
         add("xor", TokenType.KW_XOR);

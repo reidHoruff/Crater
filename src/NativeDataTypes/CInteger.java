@@ -10,14 +10,12 @@ import java.util.ArrayList;
  */
 public class CInteger extends CDT {
 
-    public long value;
+    //TODO: CInteger (and other literals) should be immutable, private constructor, factory with pool of common values like 1,-1
+
+    public final long value;
 
     public CInteger(long value) {
         super();
-        this.setIntValue(value);
-    }
-
-    public void setIntValue(long value) {
         this.value = value;
     }
 
@@ -145,14 +143,6 @@ public class CInteger extends CDT {
         return super.siAccessMember(identifier, accessor);
     }
 
-    public void increment() {
-        this.value += 1;
-    }
-
-    public void deincrement() {
-        this.value -= 1;
-    }
-
     @Override
     public CDT siSubtract(CDT other) {
         if (other instanceof CInteger) {
@@ -184,18 +174,6 @@ public class CInteger extends CDT {
             return new CFloat(this.value + other.toFloat());
         }
         return super.siPlus(other);
-    }
-
-    @Override
-    public CDT siPlusEquals(CDT other) {
-        if (other instanceof CInteger) {
-            this.value += other.toInt();
-            return this;
-        }
-        if (other instanceof CFloat) {
-            return new CFloat(this.value + other.toFloat());
-        }
-        return super.siPlusEquals(other);
     }
 
     @Override

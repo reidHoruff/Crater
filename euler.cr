@@ -35,5 +35,15 @@ while (i * i) < n {
 }
 n.put();
 
-var substr = "foo.bar.baz"[10...0 by 0.5];
+var substr = "foo.bar.baz"[0...end by 5];
 substr.put();
+
+var count = 0
+var data = {};
+for i in 0..1000000 {
+    count += 1;
+    data[count] = count * 3;
+}
+
+data.put();
+

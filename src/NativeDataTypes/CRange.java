@@ -10,7 +10,7 @@ import java.util.ArrayList;
  */
 public class CRange extends CDT{
 
-    public CDT head, tail, increment;
+    public CDT head, tail, increment, lazyHead, lazyTail;
     private boolean include, backwards;
 
     public CRange(CDT head, CDT tail, CDT increment, boolean include) {
@@ -18,6 +18,33 @@ public class CRange extends CDT{
         this.tail = tail;
         this.increment = increment;
         this.include = include;
+
+        if (head instanceof EndCDT) {
+            this.lazyHead = head;
+        }
+
+        else if (tail instanceof EndCDT) {
+            this.lazyTail = head;
+        }
+
+        else {
+            this.backwards = head.siGreaterThan(tail).toBool();
+        }
+    }
+
+    public boolean isLazy() {
+        return this.lazyHead != null || this.lazyTail != null;
+    }
+
+    public void lazyRealize(CDT value) {
+        if (this.lazyHead != null) {
+            this.head = value;
+        }
+
+        else if (this.lazyTail != null) {
+            this.tail = value;
+        }
+
         this.backwards = head.siGreaterThan(tail).toBool();
     }
 

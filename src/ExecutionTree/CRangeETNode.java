@@ -5,6 +5,7 @@ import Exceptions.CraterExecutionException;
 import NativeDataTypes.CDT;
 import NativeDataTypes.CInteger;
 import NativeDataTypes.CRange;
+import NativeDataTypes.EndCDT;
 
 /**
  * Created by reidhoruff on 10/13/14.
@@ -31,10 +32,14 @@ public class CRangeETNode extends ETNode {
         CDT tail = this.tail.executeMetaSafe(scope);
         CDT increment = this.increment.executeMetaSafe(scope);
 
-        if (!head.isNumber() || !tail.isNumber() || !increment.isNumber()) {
+        if (!isValidCRangeType(head) || !isValidCRangeType(tail) || !isValidCRangeType(increment)) {
             throw new CraterExecutionException("range can only contain integers and floats");
         }
 
         return new CRange(head, tail, increment, this.include);
+    }
+
+    private boolean isValidCRangeType(CDT node) {
+        return node.isNumber() || node instanceof EndCDT;
     }
 }

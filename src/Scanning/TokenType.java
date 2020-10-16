@@ -70,4 +70,5 @@ public enum TokenType {
     KW_THIS,
     KW_NOT,
     D_NOT_EQUAL,
+    KW_END
 }
