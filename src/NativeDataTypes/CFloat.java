@@ -1,5 +1,7 @@
 package NativeDataTypes;
 
+import Exceptions.CraterExecutionException;
+
 /**
  * Created by reidhoruff on 11/3/14.
  */
@@ -32,6 +34,36 @@ public class CFloat extends CDT {
         }
 
         return super.siPlus(other);
+    }
+
+    @Override
+    public CDT siDivide(CDT other) {
+        if (other instanceof CInteger) {
+            long bottom = other.toInt();
+            if (bottom == 0) {
+                throw new CraterExecutionException("Divide by zero.");
+            }
+            return new CFloat(this.value / bottom);
+        }
+        if (other instanceof CFloat) {
+            double bottom = other.toFloat();
+            if (bottom == 0.0) {
+                throw new CraterExecutionException("Divide by zero.");
+            }
+            return new CFloat(this.value / bottom);
+        }
+        return super.siDivide(other);
+    }
+
+    @Override
+    public CDT siSubtract(CDT other) {
+        if (other instanceof CInteger) {
+            return new CFloat(this.value - other.toInt());
+        }
+        if (other instanceof CFloat) {
+            return new CFloat(this.value - other.toFloat());
+        }
+        return super.siSubtract(other);
     }
 
     @Override

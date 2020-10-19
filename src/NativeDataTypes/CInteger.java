@@ -2,6 +2,7 @@ package NativeDataTypes;
 
 import BuiltinFunctions.CBuiltinMemberFunction;
 import CraterExecutionEnvironment.CraterVariableScope;
+import Exceptions.CraterExecutionException;
 import ExecutionTree.ETNode;
 
 import java.util.ArrayList;
@@ -169,10 +170,18 @@ public class CInteger extends CDT {
     @Override
     public CDT siDivide(CDT other) {
         if (other instanceof CInteger) {
-            return CInteger.gimmie(this.value / other.toInt());
+            long bottom = other.toInt();
+            if (bottom == 0) {
+                throw new CraterExecutionException("Divide by zero.");
+            }
+            return CInteger.gimmie(this.value / bottom);
         }
         if (other instanceof CFloat) {
-            return new CFloat(this.value / other.toFloat());
+            double bottom = other.toFloat();
+            if (bottom == 0.0) {
+                throw new CraterExecutionException("Divide by zero.");
+            }
+            return new CFloat(this.value / bottom);
         }
         return super.siDivide(other);
     }
@@ -191,8 +200,11 @@ public class CInteger extends CDT {
     @Override
     public CDT siMod(CDT other) {
         if (other instanceof CInteger) {
-            //todo divide by zero
-            return CInteger.gimmie(this.value % other.toInt());
+            long bottom = other.toInt();
+            if (bottom == 0) {
+                throw new CraterExecutionException("Divide by zero.");
+            }
+            return CInteger.gimmie(this.value % bottom);
         }
         return super.siMod(other);
     }
