@@ -123,6 +123,9 @@ public class CFloat extends CDT {
         if (other instanceof CInteger) {
             return new CBoolean(this.value < other.toInt());
         }
+        if (other instanceof CFloat) {
+            return new CBoolean(this.value < other.toFloat());
+        }
         if (other instanceof InfCDT) {
             return new CBoolean(true);
         }

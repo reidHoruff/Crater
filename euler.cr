@@ -1,4 +1,11 @@
-(1.0/4.0).put();
+var assert = |b| -> {
+    if b == false {
+        "ERRRRRRR".put();
+        return false;
+    } else {
+        return true;
+    }
+}
 
 var problem = | name, answer, code | -> {
     name.put();
@@ -10,6 +17,25 @@ var problem = | name, answer, code | -> {
         "  Pass".put()
 
 }
+
+problem("Number compare test", true, || -> {
+    var all_good = true;
+    var armith_check = |a,b| -> {
+        var ans = [false, true, false, true];
+        var ii = 0;
+        for val in [a>b, a>=b, a<b, a<=b] {
+            all_good = all_good and assert(val == ans[ii]);
+            ii += 1;
+        }
+    }
+
+    armith_check(1,1)
+    armith_check(1,1.0)
+    armith_check(1.0,1)
+    armith_check(1.0,1.0)
+
+    return all_good;
+});
 
 problem("Problem 1", 233168, || -> {
     var sum = 0;
