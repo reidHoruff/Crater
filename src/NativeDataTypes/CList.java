@@ -3,6 +3,7 @@ package NativeDataTypes;
 import BuiltinFunctions.CBuiltinMemberFunction;
 import CraterExecutionEnvironment.CraterVariableScope;
 import Exceptions.CraterExecutionException;
+import ExecutionTree.ETNode;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -120,7 +121,7 @@ public class CList extends AbstractCIndexable {
         if (identifier.equals("append")) {
             return new CBuiltinMemberFunction(this) {
                 @Override
-                public CDT callWithArguments(ArrayList<CDT> values) {
+                public CDT callWithArguments(ArrayList<CDT> values, ETNode parent) {
                     for (CDT value : values) {
                         this.host.siPlusEquals(value);
                     }
@@ -132,11 +133,11 @@ public class CList extends AbstractCIndexable {
         if (identifier.equals("map")) {
             return new CBuiltinMemberFunction(this) {
                 @Override
-                public CDT callWithArguments(ArrayList<CDT> values) {
+                public CDT callWithArguments(ArrayList<CDT> values, ETNode parent) {
                     CDT lam = values.get(0);
                     CList map = new CList();
                     for (CDT value : ((CList)this.host).getItems()) {
-                        map.addCDT(lam.callWithSingleArgument(value.metaSafe()));
+                        map.addCDT(lam.callWithSingleArgument(value.metaSafe(), parent));
                     }
                     return map;
                 }
@@ -146,10 +147,10 @@ public class CList extends AbstractCIndexable {
         if (identifier.equals("each")) {
             return new CBuiltinMemberFunction(this) {
                 @Override
-                public CDT callWithArguments(ArrayList<CDT> values) {
+                public CDT callWithArguments(ArrayList<CDT> values, ETNode parent) {
                     CDT lam = values.get(0);
                     for (CDT value : ((CList)this.host).getItems()) {
-                        lam.toCFunction().callWithSingleArgument(value);
+                        lam.toCFunction().callWithSingleArgument(value, parent);
                     }
                     return CNone.get();
                 }
@@ -159,7 +160,7 @@ public class CList extends AbstractCIndexable {
         if (identifier.equals("empty")) {
             return new CBuiltinMemberFunction(this) {
                 @Override
-                public CDT callWithArguments(ArrayList<CDT> values) {
+                public CDT callWithArguments(ArrayList<CDT> values, ETNode parent) {
                     return new CBoolean(((CList)this.host).isEmpty());
                 }
             };
@@ -168,7 +169,7 @@ public class CList extends AbstractCIndexable {
         if (identifier.equals("sort")) {
             return new CBuiltinMemberFunction(this) {
                 @Override
-                public CDT callWithArguments(ArrayList<CDT> values) {
+                public CDT callWithArguments(ArrayList<CDT> values, ETNode parent) {
                     ((CList)this.host).sort();
                     return this.host;
                 }
@@ -178,7 +179,7 @@ public class CList extends AbstractCIndexable {
         if (identifier.equals("head")) {
             return new CBuiltinMemberFunction(this) {
                 @Override
-                public CDT callWithArguments(ArrayList<CDT> values) {
+                public CDT callWithArguments(ArrayList<CDT> values, ETNode parent) {
                     return ((CList)this.host).head();
                 }
             };
@@ -187,7 +188,7 @@ public class CList extends AbstractCIndexable {
         if (identifier.equals("tail")) {
             return new CBuiltinMemberFunction(this) {
                 @Override
-                public CDT callWithArguments(ArrayList<CDT> values) {
+                public CDT callWithArguments(ArrayList<CDT> values, ETNode parent) {
                     return ((CList)this.host).tail();
                 }
             };
@@ -196,7 +197,7 @@ public class CList extends AbstractCIndexable {
         if (identifier.equals("shuffle")) {
             return new CBuiltinMemberFunction(this) {
                 @Override
-                public CDT callWithArguments(ArrayList<CDT> values) {
+                public CDT callWithArguments(ArrayList<CDT> values, ETNode parent) {
                     ((CList)this.host).shuffle();
                     return this.host;
                 }

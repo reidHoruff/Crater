@@ -53,7 +53,6 @@ var problem_3 = || -> {
 probs += [problem_3]
 
 var problem_4 = || ->  {
-
     "Problem 4".put();
     var max = |pals| -> {
         var m = pals[0]
@@ -73,12 +72,32 @@ var problem_4 = || ->  {
             }
         }
     }
-    check( max(options), 906609 )
+    check( max(options), 906609 );
 }
 
 probs += [problem_4]
 
-for p in probs {
-    p()
+var problem_5 = || -> {
+    var txt = "Problem 5"
+    txt.put();
 }
+
+probs += [problem_5]
+
+for p in 0..5 {
+    probs[p]();
+};
+
+
+var txt = "HelloWorld2"
+txt.put();
+
+var xx = 2/0;
+xx.put();
+
+for i in [0] {
+}
+
+
+
 

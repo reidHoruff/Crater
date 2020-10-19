@@ -61,7 +61,10 @@ public class CFunction extends CDT {
      * variables that are defined within the function.
      */
     @Override
-    public CDT callWithArguments(ArrayList<CDT> values) {
+    public CDT callWithArguments(ArrayList<CDT> values, ETNode parent) {
+
+        this.body.setParent(parent);
+
         /**
          * create own variable scope (stack frame like)
          * then call.
@@ -93,12 +96,12 @@ public class CFunction extends CDT {
     }
 
     @Override
-    public CDT callWithSingleArgument(CDT value) {
+    public CDT callWithSingleArgument(CDT value, ETNode parent) {
         /**
          * yea this is pretty shitty...
          */
         ArrayList<CDT> list = new ArrayList<CDT>();
         list.add(value);
-        return this.callWithArguments(list);
+        return this.callWithArguments(list, parent);
     }
 }

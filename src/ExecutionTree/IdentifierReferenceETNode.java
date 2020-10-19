@@ -18,7 +18,7 @@ public class IdentifierReferenceETNode extends ETNode {
     }
 
     public CDT execute(CraterVariableScope scope) {
-        return scope.getVariableReference(this.hash);
+        return scope.getVariableReference(this.hash, this.token.sequence);
     }
 
     public void print(int level) {

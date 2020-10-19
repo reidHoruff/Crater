@@ -854,7 +854,7 @@ public class CraterParser {
          * functions)
          */
         if (acceptThenKeep(TokenType.R_IDENT)) {
-            return new IdentifierReferenceETNode(popKeptToken());
+            return (new IdentifierReferenceETNode(popKeptToken())).setSpawningToken(peekMarkedToken());
         }
 
         if (isInsideClass() && isInsideFunction()) {

@@ -2,6 +2,7 @@ package NativeDataTypes;
 
 import BuiltinFunctions.CBuiltinMemberFunction;
 import CraterExecutionEnvironment.CraterVariableScope;
+import ExecutionTree.ETNode;
 
 import java.util.ArrayList;
 
@@ -139,11 +140,11 @@ public class CInteger extends CDT {
         if (identifier.equals("each")) {
             return new CBuiltinMemberFunction(this) {
                 @Override
-                public CDT callWithArguments(ArrayList<CDT> values) {
+                public CDT callWithArguments(ArrayList<CDT> values, ETNode parent) {
                     for (CDT value : values) {
                         int v = (int)((CInteger)this.host).value;
                         for (int i = 0; i < v; i++) {
-                            value.callWithSingleArgument(CInteger.gimmie(i));
+                            value.callWithSingleArgument(CInteger.gimmie(i), parent);
                         }
                     }
                     return CNone.get();

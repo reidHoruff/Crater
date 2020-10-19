@@ -42,13 +42,13 @@ public class ForLoopETNode extends ETNode {
         if (expression instanceof CRange) {
             // this could be simpler but is OPTIMIZED!
             CRange range = expression.toCRange();
-            CDT value = range.head.clone();
+            CDT value = range.getHead().clone();
             MetaCDT wrapped = value.withMetaWrapper();
             scope.nonRecursiveSetValueWithWrapper(this.variableIdent, wrapped);
             while (!this.isExecutionBroken && range.siContains(value).toBool()) {
                 wrapped.setData(value);
                 lastValue = this.body.executeMetaSafe(scope);
-                value = value.siPlus(range.increment);
+                value = value.siPlus(range.getActualIncrement());
             }
         } else if (expression instanceof CDict) {
             CDict dict = expression.toCDict();

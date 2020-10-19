@@ -3,6 +3,7 @@ package NativeDataTypes;
 import BuiltinFunctions.CBuiltinMemberFunction;
 import CraterExecutionEnvironment.CraterVariableScope;
 import Exceptions.CraterExecutionException;
+import ExecutionTree.ETNode;
 import Scanning.Token;
 
 import java.util.ArrayList;
@@ -48,7 +49,7 @@ public class CString extends CDT {
         if (identifier.equals("length")) {
             return new CBuiltinMemberFunction(this) {
                 @Override
-                public CDT callWithArguments(ArrayList<CDT> values) {
+                public CDT callWithArguments(ArrayList<CDT> values, ETNode parent) {
                     return CInteger.gimmie(((CString)this.host).length());
                 }
             };

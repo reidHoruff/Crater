@@ -1,5 +1,6 @@
 package BuiltinFunctions;
 
+import ExecutionTree.ETNode;
 import NativeDataTypes.*;
 
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ public class ListBuiltinFunction extends CFunction {
     }
 
     @Override
-    public CDT callWithArguments(ArrayList<CDT> values) {
+    public CDT callWithArguments(ArrayList<CDT> values, ETNode parent) {
         if (values.get(0) instanceof CRange) {
             return values.get(0).toCRange().generateList();
         }

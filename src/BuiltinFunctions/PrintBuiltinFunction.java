@@ -1,6 +1,7 @@
 package BuiltinFunctions;
 
 import Exceptions.CraterExecutionException;
+import ExecutionTree.ETNode;
 import NativeDataTypes.CDT;
 import NativeDataTypes.CFunction;
 import NativeDataTypes.CList;
@@ -20,7 +21,7 @@ public class PrintBuiltinFunction extends CBuiltinFunction {
     }
 
     @Override
-    public CDT callWithArguments(ArrayList<CDT> values) {
+    public CDT callWithArguments(ArrayList<CDT> values, ETNode parent) {
         System.out.print("::");
 
         for (int i = 0; i < values.size(); i++) {

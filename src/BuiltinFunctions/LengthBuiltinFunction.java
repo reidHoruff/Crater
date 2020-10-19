@@ -1,6 +1,7 @@
 package BuiltinFunctions;
 
 import Exceptions.CraterExecutionException;
+import ExecutionTree.ETNode;
 import ExecutionTree.FunctionDefinitionETNode;
 import NativeDataTypes.*;
 
@@ -12,7 +13,7 @@ import java.util.ArrayList;
 public class LengthBuiltinFunction extends CBuiltinFunction {
 
     @Override
-    public CDT callWithArguments(ArrayList<CDT> values) {
+    public CDT callWithArguments(ArrayList<CDT> values, ETNode parent) {
         if (values.size() != 1) {
             throw new CraterExecutionException("len() must be called with exactly 1 parameter");
         }

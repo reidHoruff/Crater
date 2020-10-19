@@ -2,6 +2,7 @@ package NativeDataTypes;
 
 import BuiltinFunctions.CBuiltinMemberFunction;
 import CraterExecutionEnvironment.CraterVariableScope;
+import ExecutionTree.ETNode;
 
 import java.util.ArrayList;
 
@@ -10,7 +11,7 @@ import java.util.ArrayList;
  */
 public class CRange extends CDT{
 
-    public CDT head, tail, increment, lazyHead, lazyTail;
+    private CDT head, tail, increment, lazyHead, lazyTail;
     private boolean include, backwards;
 
     public CRange(CDT head, CDT tail, CDT increment, boolean include) {
@@ -36,6 +37,14 @@ public class CRange extends CDT{
         return this.lazyHead != null || this.lazyTail != null;
     }
 
+    public CDT getHead() {
+        return this.head;
+    }
+
+    public CDT getTail() {
+        return this.tail;
+    }
+
     public void lazyRealize(CDT value) {
         if (this.lazyHead != null) {
             this.head = value;
@@ -48,14 +57,19 @@ public class CRange extends CDT{
         this.backwards = head.siGreaterThan(tail).toBool();
     }
 
+    public CDT getActualIncrement() {
+        if (this.backwards) {
+            return this.increment.siMultiply(CInteger.gimmie(-1));
+        }
+        else {
+            return this.increment;
+        }
+    }
+
     public CList generateList() {
         CList list = new CList();
         CDT value = this.head.clone();
-        CDT inc = this.increment;
-
-        if (this.backwards) {
-            inc = inc.siMultiply(CInteger.gimmie(-1));
-        }
+        CDT inc = this.getActualIncrement();
 
         while (true) {
             if (!this.siContains(value).toBool()) break;
@@ -99,7 +113,7 @@ public class CRange extends CDT{
         if (identifier.equals("expand")) {
             return new CBuiltinMemberFunction(this) {
                 @Override
-                public CDT callWithArguments(ArrayList<CDT> values) {
+                public CDT callWithArguments(ArrayList<CDT> values, ETNode parent) {
                     return ((CRange)this.host).generateList();
                 }
             };

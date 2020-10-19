@@ -8,6 +8,7 @@ import BuiltinFunctions.CBuiltinMemberFunction;
 import CraterExecutionEnvironment.CraterVariableScope;
 import Exceptions.CraterExecutionException;
 import Exceptions.CraterInvalidSimpleOperationException;
+import ExecutionTree.ETNode;
 
 import java.util.ArrayList;
 
@@ -32,11 +33,11 @@ public abstract class CDT implements Comparable<CDT> {
         return new MetaCDT(this.metaSafe());
     }
 
-    public CDT callWithArguments(ArrayList<CDT> values) {
+    public CDT callWithArguments(ArrayList<CDT> values, ETNode parent) {
         throw new CraterExecutionException("cannot call upon this object [" + this.getTypeName() + "]");
     }
 
-    public CDT callWithSingleArgument(CDT value) {
+    public CDT callWithSingleArgument(CDT value, ETNode parent) {
         throw new CraterExecutionException("cannot call upon this object [" + this.getTypeName() + "]");
     }
 
@@ -192,7 +193,7 @@ public abstract class CDT implements Comparable<CDT> {
         if (identifier.equals("new")) {
             return new CBuiltinMemberFunction(this) {
                 @Override
-                public CDT callWithArguments(ArrayList<CDT> values) {
+                public CDT callWithArguments(ArrayList<CDT> values, ETNode parent) {
                     return this.host.siInstantiate(values);
                 }
             };
@@ -205,7 +206,7 @@ public abstract class CDT implements Comparable<CDT> {
         if (identifier.equals("to_s")) {
             return new CBuiltinMemberFunction(this) {
                 @Override
-                public CDT callWithArguments(ArrayList<CDT> values) {
+                public CDT callWithArguments(ArrayList<CDT> values, ETNode parent) {
                     return new CString(this.host.toString());
                 }
             };
@@ -214,7 +215,7 @@ public abstract class CDT implements Comparable<CDT> {
         if (identifier.equals("put")) {
             return new CBuiltinMemberFunction(this) {
                 @Override
-                public CDT callWithArguments(ArrayList<CDT> values) {
+                public CDT callWithArguments(ArrayList<CDT> values, ETNode parent) {
                     System.out.println(this.host.toString());
                     return CNone.get();
                 }
@@ -224,7 +225,7 @@ public abstract class CDT implements Comparable<CDT> {
         if (identifier.equals("get_t")) {
             return new CBuiltinMemberFunction(this) {
                 @Override
-                public CDT callWithArguments(ArrayList<CDT> values) {
+                public CDT callWithArguments(ArrayList<CDT> values, ETNode parent) {
                     return new CString(this.host.getTypeName());
                 }
             };
