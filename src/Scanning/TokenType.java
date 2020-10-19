@@ -10,6 +10,7 @@ public enum TokenType {
     C_DASH,
     C_STAR,
     C_FLSASH,
+    C_DOUBLE_FLSASH,
     C_LPAREN,
     C_RPAREN,
     C_EQUALS,

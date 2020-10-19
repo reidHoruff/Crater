@@ -34,6 +34,7 @@ public class SimpleOperationETNode extends ETNode {
             case C_STAR: return l.siMultiply(r);
             case C_DASH: return l.siSubtract(r);
             case C_FLSASH: return l.siDivide(r);
+            case C_DOUBLE_FLSASH: return l.siFloorDivide(r);
             case KW_AND: return l.siBooleanAnd(r);
             case KW_OR: return l.siBooleanOr(r);
             case KW_XOR: return l.siBooleanXor(r);

@@ -125,6 +125,10 @@ public abstract class CDT implements Comparable<CDT> {
         throw new CraterInvalidSimpleOperationException("/", this, other);
     }
 
+    public CDT siFloorDivide(CDT other) {
+        throw new CraterInvalidSimpleOperationException("//", this, other);
+    }
+
     public CDT siMultiply(CDT other) {
         throw new CraterInvalidSimpleOperationException("*", this, other);
     }

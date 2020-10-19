@@ -1,28 +1,27 @@
+(1.0/4.0).put();
 
-var check = |output, answer| -> {
+var problem = | name, answer, code | -> {
+    name.put();
+    var output = code();
+
     if output != answer
         "Error".put()
     else
-        "Pass".put()
+        "  Pass".put()
+
 }
 
-var probs = []
-
-var problem_1 = || -> {
-    "Problem 1".put()
+problem("Problem 1", 233168, || -> {
     var sum = 0;
     for x in 1..1000 {
      if (x % 3 == 0) or (x % 5 == 0) {
       sum += x;
      }
     }
-    check( sum, 233168 )
-}
+    return sum;
+});
 
-probs += [problem_1]
-
-var problem_2 = || -> {
-    "Problem 2".put()
+problem("Problem 2", 4613732, || -> {
     var a = 0;
     var b = 1;
     var even_sum = 0;
@@ -32,13 +31,10 @@ var problem_2 = || -> {
       b = c;
       if c % 2 == 0 { even_sum += c }
     }
-    check( even_sum, 4613732 )
-}
+    return even_sum;
+});
 
-probs += [problem_2]
-
-var problem_3 = || -> {
-    "Problem 3".put();
+problem("Problem 3", 6857, || -> {
     var n = 600851475143
     var i = 2
     while (i * i) < n {
@@ -47,13 +43,10 @@ var problem_3 = || -> {
          }
          i = i + 1
     }
-    check( n, 6857 )
-}
+    return n;
+});
 
-probs += [problem_3]
-
-var problem_4 = || ->  {
-    "Problem 4".put();
+problem("Problem 4", 906609, || ->  {
     var max = |pals| -> {
         var m = pals[0]
         for i in 1..pals.length {
@@ -72,32 +65,24 @@ var problem_4 = || ->  {
             }
         }
     }
-    check( max(options), 906609 );
-}
+    return max(options);
+});
 
-probs += [problem_4]
+problem("Problem 5", 232792560, || -> {
+    var gcd = |a, b| -> {
+        while b != 0 {
+            var c = a;
+            a = b;
+            b = c % b
+        }
+        return a
+    }
 
-var problem_5 = || -> {
-    var txt = "Problem 5"
-    txt.put();
-}
+    var ans = 1
+    for i in 1..21 {
+        ans = ans * (i / gcd(i, ans))
+    }
 
-probs += [problem_5]
-
-for p in 0..5 {
-    probs[p]();
-};
-
-
-var txt = "HelloWorld2"
-txt.put();
-
-var xx = 2/0;
-xx.put();
-
-for i in [0] {
-}
-
-
-
+    return ans
+});
 

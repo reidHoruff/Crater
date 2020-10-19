@@ -1087,6 +1087,7 @@ public class CraterParser {
                 TokenType.C_DASH,
                 TokenType.C_STAR,
                 TokenType.C_FLSASH,
+                TokenType.C_DOUBLE_FLSASH,
                 TokenType.KW_AND,
                 TokenType.KW_OR,
                 TokenType.KW_XOR,

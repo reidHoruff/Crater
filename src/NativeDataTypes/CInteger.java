@@ -174,7 +174,12 @@ public class CInteger extends CDT {
             if (bottom == 0) {
                 throw new CraterExecutionException("Divide by zero.");
             }
-            return CInteger.gimmie(this.value / bottom);
+
+            if (this.value % bottom == 0) {
+                return CInteger.gimmie(this.value / bottom);
+            } else {
+                return new CFloat(this.value / (double)bottom);
+            }
         }
         if (other instanceof CFloat) {
             double bottom = other.toFloat();
@@ -182,6 +187,25 @@ public class CInteger extends CDT {
                 throw new CraterExecutionException("Divide by zero.");
             }
             return new CFloat(this.value / bottom);
+        }
+        return super.siDivide(other);
+    }
+
+    @Override
+    public CDT siFloorDivide(CDT other) {
+        if (other instanceof CInteger) {
+            long bottom = other.toInt();
+            if (bottom == 0) {
+                throw new CraterExecutionException("Divide by zero.");
+            }
+            return CInteger.gimmie(this.value / bottom);
+        }
+        if (other instanceof CFloat) {
+            double bottom = other.toFloat();
+            if (bottom == 0.0) {
+                throw new CraterExecutionException("Divide by zero.");
+            }
+            return CInteger.gimmie((long)(this.value / bottom));
         }
         return super.siDivide(other);
     }

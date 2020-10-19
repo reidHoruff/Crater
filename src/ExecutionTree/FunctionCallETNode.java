@@ -63,7 +63,6 @@ public class FunctionCallETNode extends ETNode {
 
     @Override
     protected void handleReturn() {
-        System.out.println("FFFFFFF");
         return;
     }
 }

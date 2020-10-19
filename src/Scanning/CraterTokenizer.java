@@ -83,6 +83,7 @@ public class CraterTokenizer {
         add("\\+", TokenType.C_PLUS);
         add("\\-", TokenType.C_DASH);
         add("\\*", TokenType.C_STAR);
+        add("\\/\\/", TokenType.C_DOUBLE_FLSASH);
         add("\\/", TokenType.C_FLSASH);
         add("\\|", TokenType.C_PIPE);
         add("==", TokenType.D_DOUBLE_EQUALS);
