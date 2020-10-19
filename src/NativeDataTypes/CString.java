@@ -118,6 +118,16 @@ public class CString extends CDT {
             return new CString(this.value.substring(idx, idx + 1));
         }
 
+        else if (index instanceof EndCDT) {
+            int idx = this.value.length()-1;
+
+            if (idx < 0 || idx >= this.value.length()) {
+                throw new CraterExecutionException("String index out of bounds.");
+            }
+
+            return new CString(this.value.substring(idx, idx + 1));
+        }
+
         else if (index instanceof CRange) {
 
             CRange range = index.toCRange();
@@ -142,6 +152,59 @@ public class CString extends CDT {
                 }
 
                 out += this.value.substring(idx, idx + 1);
+            }
+
+            return new CString(out);
+        }
+        else if (index instanceof CList) {
+
+            ArrayList<MetaCDT> indexListValues = index.toCList().getItems();
+            String out = ""; // TODO: should be string builder, will be slow
+
+            for (MetaCDT metaIndexListValue : indexListValues ){
+                CDT indexListValue = metaIndexListValue.metaSafe();
+                if (indexListValue instanceof CRange) {
+                    CRange range = indexListValue.toCRange();
+
+                    if (range.isLazy()) {
+                        range.lazyRealize(CInteger.gimmie(this.length() - 1));
+                    }
+
+                    ArrayList<MetaCDT> values = range.generateList().getItems();
+
+                    for (MetaCDT mcidx : values) {
+                        CDT cidx = mcidx.metaSafe();
+                        if (!(cidx instanceof CInteger)) {
+                            throw new CraterExecutionException("String index range contains non integer value.");
+                        }
+
+                        int idx = (int)cidx.toInt();
+
+                        if (idx < 0 || idx >= this.value.length()) {
+                            throw new CraterExecutionException("String range index out of bounds.");
+                        }
+
+                        out += this.value.substring(idx, idx + 1);
+                    }
+                }
+                else if (indexListValue instanceof CInteger) {
+                    int idx = (int)indexListValue.toInt();
+
+                    if (idx < 0 || idx >= this.value.length()) {
+                        throw new CraterExecutionException("String index out of bounds.");
+                    }
+                    out += this.value.substring(idx, idx + 1);
+                }
+
+                else if (indexListValue instanceof EndCDT) {
+                    int idx = this.value.length()-1;
+
+                    if (idx < 0 || idx >= this.value.length()) {
+                        throw new CraterExecutionException("String index out of bounds.");
+                    }
+
+                    out += this.value.substring(idx, idx + 1);
+                }
             }
 
             return new CString(out);

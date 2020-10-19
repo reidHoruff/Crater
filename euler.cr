@@ -112,3 +112,11 @@ problem("Problem 5", 232792560, || -> {
     return ans
 });
 
+problem("String index test", true, || -> {
+    var str = "This.is.a.long.string.that.contains.lots.of.worlds.and.thoughts.that.i.am.writing.stream.of.consciousness.z";
+    return str[[0..4, 5..7, 8, end]] == "Thisisaz";
+});
+
+
+
+
